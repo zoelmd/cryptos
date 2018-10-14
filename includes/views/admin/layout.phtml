@@ -1,0 +1,36 @@
+<div class="container">
+    <?php if(config('announcement')):?>
+        <div style="margin: 5px 0" class="alert alert-<?php echo config('announcement-type', 'info')?>"><?php echo config('announcement')?> </div>
+    <?php endif?>
+    <div class="row " style="margin: 20px 0">
+
+        <div class="col-md-3 left  box">
+            <div class="menu">
+                <ul class="nav flex-column">
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == '') ? ' active' : null?>" href="<?php echo url('admincp')?>"><?php _lang('dashboard')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'settings') ? ' active' : null?>" href="<?php echo url('admincp/settings')?>"><?php _lang('settings')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'appearance') ? ' active' : null?>" href="<?php echo url('admincp/appearance')?>"><?php _lang('appearance')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'blog') ? ' active' : null?>" href="<?php echo url('admincp/blog')?>"><?php _lang('blog-manager')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'coins') ? ' active' : null?>" href="<?php echo url('admincp/coins')?>"><?php _lang('coins-manager')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'users') ? ' active' : null?>" href="<?php echo url('admincp/users')?>"><?php _lang('users-management')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'badges') ? ' active' : null?>" href="<?php echo url('admincp/badges')?>"><?php _lang('user-badges')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'requests') ? ' active' : null?>" href="<?php echo url('admincp/requests')?>">
+                            <?php _lang('verification-requests')?>
+                            <?php $count = count(get_verification_requests());if($count > 0):?>
+                                <span class="badge badge-danger"><?php echo $count?></span>
+                            <?php endif?>
+                        </a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'pages') ? ' active' : null?>" href="<?php echo url('admincp/pages')?>"><?php _lang('pages')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'menu') ? ' active' : null?>" href="<?php echo url('admincp/menu')?>"><?php _lang('menu-manager')?></a></li>
+                    <li><a class="nav-link ajax-link <?php echo (segment(1) == 'adverts') ? ' active' : null?>" href="<?php echo url('admincp/adverts')?>"><?php _lang('advertisement')?></a></li>
+                </ul>
+            </div>
+
+        </div>
+        <div class="col-md-9 right">
+            <div class="box">
+                <?php echo $content?>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,195 @@
+<div class="generic-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <h5><?php _lang('forum')?></h5>
+            </div>
+            <div class="col-md-10">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link ajax-link <?php echo ($page == 'coin') ? 'active' :null?>" href="<?php echo url('forum')?>">
+                            <?php _lang('coin-forum')?>
+                            <span class="badge badge-default"><?php echo count_forum_posts('coin')?></span>
+                        </a>
+                    </li>
+                    <!--<li class="nav-item">
+                        <a class="nav-link ajax-link <?php echo ($page == 'exchange') ? 'active' :null?>" href="<?php echo url('forum/exchange')?>">
+                            <?php _lang('exchange-forum')?>
+                            <span class="badge badge-default"><?php echo count_forum_posts('exchange')?></span>
+                        </a>
+                    </li>-->
+                    <li class="nav-item">
+                        <a class="nav-link ajax-link  <?php echo ($page == 'latest') ? 'active' :null?>" href="<?php echo url('forum/latest')?>"><?php _lang('latest-posts')?></a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="" style="position: absolute;right: 15px;top: -20px">
+            <?php if(is_loggedin()):?>
+                <button data-toggle="modal" data-target="#threadModal" class="btn btn-primary btn-sm"><i class="icons icon-plus"></i> <?php _lang('start-a-thread')?></button>
+            <?php else:?>
+                <button onclick="return pre_process_result('login-is-needed')" class="btn btn-primary btn-sm"><i class="icons icon-plus"></i> <?php _lang('start-a-thread')?></button>
+            <?php endif?>
+            <div class="modal fade" id="threadModal">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title"><?php _lang('start-a-thread')?></h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                            <div class="modal-body" style="padding: 3px !important;">
+                                <?php echo view('main::post/editor', array('id' => '', 'type' => 'coin'))?>
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row box"  >
+        <div class="col-md-9">
+            <?php if(config('announcement')):?>
+                <div style="margin: 5px 0" class="alert alert-<?php echo config('announcement-type', 'info')?>"><?php echo config('announcement')?> </div>
+            <?php endif?>
+            <?php if(config('top_ads', false)):?>
+                <div class="" style="margin: 10px;display: block">
+                    <?php echo config('top_ads', '')?>
+                </div>
+            <?php endif?>
+
+            <?php if($page == 'coin' OR $page == 'exchange'):?>
+                <?php $posts = get_coin_forums($page)?>
+
+                <?php if(!$posts):?>
+                    <div id="empty-post-content" style="text-align: center;padding: 40px  10px;font-size: 15px">
+                        <i class="icons icon-pie-chart" style="font-size: 50px;display: block;margin: 10px auto"></i>
+                        <?php _lang('no-posts-display')?>
+                    </div>
+                <?php else:?>
+                    <?php foreach($posts as $post):?>
+
+                            <div class="each-forum clearfix">
+                                <div class="float-left">
+                                    <img style="width: 25px;height: 25px;display: inline-block" src="<?php echo url($post['item']['logo'])?>"/>
+                                    <div style="display: inline-block">
+                                        <a class="ajax-link" href="<?php echo $post['item']['link']?>"><strong><?php echo $post['item']['name']?></strong></a>
+                                        <br/>
+                                        <?php if(isset($post['item']['symbol'])):?>
+                                            <span style="color: grey"><?php echo $post['item']['symbol']?></span>
+                                        <?php endif?>
+                                    </div>
+                                </div>
+                                <div class="float-right">
+                                    <ul>
+                                        <li>
+                                            <span class="forum-info-title"><?php _lang('last-activity')?></span>
+                                            <span>
+                                                <?php $user = get_user($post['last']['user_id']);?>
+                                                <a href="<?php echo profile_link($user)?>" class="ajax-link">
+                                                    <img src="<?php echo get_avatar(75,$user)?>" style="width: 20px;height: 20px;border-radius:100px"/>
+                                                    <?php echo $user['username']?>
+                                                </a> - <?php echo  format_time($post['last']['date_created'])?>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="count"><?php echo $post['posts']?></span>
+                                            <span><?php _lang('posts')?></span>
+                                        </li>
+                                        <li>
+                                            <span class="count"><?php echo $post['comments']?></span>
+                                            <span><?php _lang('comments')?></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php endforeach?>
+
+                        <?php if(count_forum_posts($page) > 50):?>
+                            <div class="" style="text-align: center;display: block;padding-top: 30px">
+                                <span class="btn-group">
+                                    <?php
+                                    $offset = input('offset', 0);
+                                    $limit = 50;
+                                    $previousOffset = ($offset == 0) ? 0 : $offset - $limit;
+                                    $nextoffset = $offset + $limit;
+                                    ?>
+                                    <a href="<?php echo url('forum/'.segment(1))?>?offset=<?php echo $previousOffset?>" class="btn btn-sm btn-secondary ajax-link" <?php echo ($offset== 0) ? 'disabled' : null?>><?php _lang('previous')?></a>
+                                    <a href="<?php echo url('forum'.segment(1))?>?offset=<?php echo $nextoffset?>" class="btn btn-sm btn-secondary ajax-link"><?php _lang('next')?></a>
+                                </span>
+                            </div>
+                        <?php endif?>
+                <?php endif?>
+            <?php else:?>
+                <div id="feeds-container">
+                    <div id="posts-list" data-userid="" data-page="" data-types="list" data-offset="0" class="post-list">
+                        <?php $posts = get_posts()?>
+                        <?php if($posts):?>
+                            <?php $i = 0; foreach($posts as $post):?>
+                                <?php echo view('main::post/each', array('post' => $post, 'scope' => false));?>
+
+                            <?php endforeach?>
+                        <?php else:?>
+                            <div id="empty-post-content" style="text-align: center;padding: 40px  10px;font-size: 15px">
+                                <i class="icons icon-pie-chart" style="font-size: 50px;display: block;margin: 10px auto"></i>
+                                <?php _lang('no-posts-display')?>
+                            </div>
+                        <?php endif?>
+
+
+                    </div>
+                </div>
+            <?php endif?>
+
+        </div>
+        <div class="col-md-3 " style="padding: 0">
+            <div class="sidebar__inner">
+                <div class="box side-box">
+                    <div class="title"><?php _lang('top-trending-coin')?></div>
+                    <?php foreach(get_top_coins() as $coin):?>
+                        <div class="media user-inline">
+
+                            <img style="width: 40px;height: 40px;border-radius: 100px" class="d-flex mr-3" src="<?php echo url($coin['logo'])?>" >
+                            <div class="media-body">
+                                <a style="display: block" class="ajax-link" href="<?php echo url('coin/'.strtolower($coin['symbol']).'/forum')?>">
+                                    <h6 class="mt-0" style="font-size: 13px"><strong>
+                                            <?php echo $coin['symbol']?></strong>
+                                    </h6>
+                                </a>
+                            </div>
+
+                            <div class="action">
+                                <i class="icons icon-bubbles"></i> <?php echo $coin['post_count']?>
+                            </div>
+                        </div>
+                    <?php endforeach?>
+                </div>
+
+                <?php if(config('show-top-members', true)):?>
+                    <div class="box side-box">
+                        <div class="title"><?php _lang('top-members')?></div>
+                        <div class="content">
+                            <?php foreach(get_top_members() as $user):?>
+                                <a style="display: inline-block;margin: 2px" href="<?php echo profile_link($user)?>" class="tool-tip ajax-link" title="<?php echo $user['username']?> : <?php echo $user['point']?> <?php _lang('points')?>">
+                                    <img style="width: 40px;height: 40px;border-radius: 100px" class="d-flex mr-3" src="<?php echo get_avatar(75, $user)?>" >
+                                </a>
+                            <?php endforeach?>
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <?php if(config('side_ads', false)):?>
+                    <div class="box">
+                        <?php echo config('side_ads', '')?>
+                    </div>
+                <?php endif?>
+            </div>
+        </div>
+    </div>
+</div>

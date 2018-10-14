@@ -1,0 +1,27 @@
+<div class="comment clearfix comment-<?php echo $comment['id']?>">
+    <?php $user = get_user($comment['user_id']);?>
+    <div class="media">
+        <img class="d-flex mr-3" src="<?php echo get_avatar(75, $user)?>" >
+        <div class="media-body clearfix">
+
+            <div class="float-left">
+                <a
+                    tabindex="0" data-toggle="popover"
+                    data-trigger="hover"
+                    data-content="
+               <?php echo view('main::user/popover', array('user' => $user))?>
+               "
+                    data-placement="bottom"
+                    class="ajax-link m-popover" href="<?php echo profile_link($user)?>">
+                    <h6 class="mt-0"><?php echo $user['username']?> - <span class="post-time" style="font-size: 11px;color: grey;font-weight: normal"><?php echo format_time($comment['date_created'])?></span></h6></a>
+                <?php echo $comment['comment']?>
+            </div>
+            <div class="float-right">
+                <?php if(can_edit_comment($comment)):?>
+                    <a href="" class="comment-remove-btn" data-id="<?php echo $comment['id']?>"><i class="icons icon-close"></i></a>
+                <?php endif?>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300,700" rel="stylesheet">
+    <title><?php echo $title?></title>
+    <link rel="shortcut icon" type="image/x-icon" href="<?php echo $favicon?>" />
+    <link rel="stylesheet" href="<?php echo url('assets/css/plugins.css')?>?v=1.7"/>
+    <link rel="stylesheet" href="<?php echo url('assets/js/amstock/style.css')?>"/>
+    <link rel="stylesheet" href="<?php echo url('assets/js/amstock/plugins/export/export.css')?>"/>
+    <link rel="stylesheet" href="<?php echo url("styles/".get_theme()."/css/style.css")?>?v=2.6"/>
+    <meta name="keywords" content="<?php echo $keywords?>"/>
+    <meta name="description" content="<?php echo $description?>"/>
+    <?php echo $header_content?>
+    <style>
+        <style>
+        body{
+        <?php if(config('body-background-image', '')):?>
+            background-image:url(<?php echo url(config('body-background-image', ''))?>);
+        <?php endif?>
+            background-color:<?php echo config('body-background-color', '#F6F6F6')?> !important;
+        }
+        #header{
+            background: <?php echo config('header-background-color', '#212529')?> !important;
+            color:  <?php echo config('header-text-color', '#ffffff')?> !important;
+        }
+
+        .topography{
+            background: <?php echo config('header-background-color', '#212529')?> !important;
+        }
+
+        #header  {
+            color:  <?php echo config('header-text-color', '#ffffff')?> !important;
+        }
+        .btn-primary, .primary-color {
+            background-color:<?php echo config('primary-color', '#0275D8')?> !important;
+            border-color: <?php echo config('primary-color', '#0275D8')?> !important;;
+            color: white !important;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.8;
+        }
+
+        #header .highlight {
+            background: <?php echo config('header-highlight-color', '#060708')?> !important;;
+        }
+
+        .top-search {
+            background: <?php echo config('header-top-search-color', '#060708')?> !important;;
+        }
+
+
+        <?php if(is_light_off()):?>
+        body{
+            color: #ffffff !important;
+        }
+        a {
+            color: #ffffff !important;
+        }
+        .coin-chart #coin-chart-container .amChartsButton,
+        #coin-chart #coin-chart-container .amChartsButtonSelected,
+        .amcharts-legend-title, .amcharts-legend-value {
+            color:white !important;
+        }
+
+        .generic-title{
+            background: #4B4C4D;
+        }
+        .generic-title .nav-tabs .nav-link.active, .generic-title .nav-tabs .nav-link:hover{
+            border-color: black!important;
+            background: black !important;
+        }
+        .nav-tabs .nav-item.show .nav-link,  .nav-tabs .nav-link.active {
+
+            border-color:#262729!important;
+            background: #262729 !important;
+        }
+        #blog-comments {
+            background:  #262729 !important;
+        }
+        .dropdown-menu{
+            background: #262729 !important;
+        }
+        .topography .cover{
+            background: rgba(0,0,0,0.7);
+        }
+        .box,.profile-header{
+            box-shadow: none;
+        }
+        .menu .nav-link  {
+            color: black !important;
+        }
+        .side-box .title{
+            background: black;
+        }
+        .footer{
+            color: #ffffff !important;
+        }
+        #header .highlight {
+            background: black !important;;
+        }
+
+        .top-search {
+            background: black !important;;
+        }
+            td a, th a{
+                color: #ffffff !important;
+            }
+            body{
+                background: #000000 !important;
+            }
+            .box{
+                background: #262729;
+                border-color: #262729;
+                color: #C0C0C1 !important;
+            }
+            thead{
+                background: #262729;
+                color: white !important;
+                border-color: #262729 !important;
+            }
+            th{
+                color: #ffffff !important;
+                border-color: #262729 !important;
+            }
+            td{
+                border-color: #262729 !important;
+                color: #ffffff;
+            }
+            tr,td{
+                background: #262729 !important;
+            }
+        .not-unread {
+            background: #262729 !important;
+        }
+            #header{
+                background: #1D1E20 !important;
+            }
+            .topography {
+                background-color: #1D1E20 !important;
+            }
+        .topography .top-coin-topo {
+            background: #262729 !important;
+            color: #ffffff !important;
+        }
+        .topography .top-coin-topo ul li {
+            color: white !important;
+        }
+        .topography .top-coin-topo .second{
+            background: black !important;
+        }
+            .lg-pane {
+                background: #262729 !important;
+            }
+            .lg-pane .title {
+                background: black;
+            }
+            .btn-secondary  {
+                background: #434446;
+                border-color: #434446;
+                color: #C3C3C4;
+            }
+            #featured-coins ul a {
+                background: #434446;
+                color: white !important;
+            }
+            .footer{
+                background: #1D1E20 !important;
+                color: black;
+            }
+            .top-risers {
+                background: black;
+                color: #ffffff;
+            }
+        .top-risers .title, .top-fallers .title{
+            border-color: black;
+        }
+        .top-fallers {
+            color: black;
+        }
+        .post-editor .post-footer, .each-post .comments, .each-post .comment-form{
+            background: #3B3C3D !important;
+            border-color: #3B3C3D;
+        }
+        .each-post .body{
+            color: #C0C0C1;
+        }
+        .comment {
+            border-color: #3B3C3D;
+        }
+        .profile-header{
+            background: #3B3C3D !important;
+            border-color: #3B3C3D;
+        }
+        .coin-stat-info .stat {
+            background: black;
+            color: #ffffff !important;
+        }
+        .each-post .foot {
+            border-color: #3B3C3D;
+            color: white;
+        }
+        .each-post .comment-form input{
+            background: black;
+            border-color: black !important;
+        }
+        .box .title{
+            border-color: black;
+        }
+        .user-inline {
+            border-color: black;
+        }
+        <?php endif?>
+
+
+        <?php echo config('custom-css-code', '')?>
+
+        <?php if(config('hide-coins')):$coins = explode(',', config('hide-coins'))?>
+            <?php foreach($coins as $coin):?>
+                .<?php echo $coin?>-detail-container {
+                    display: none !important;
+                }
+            <?php endforeach?>
+        <?php endif?>
+    </style>
+    <?php if(config('google-analytic', '')):?>
+        <!-- Global Site Tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo config('google-analytic', '')?>"></script>
+        <script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', '<?php echo config('google-analytic', '')?>');
+</script>
+    <?php endif?>
+</head>
+<body class="<?php echo (selected_is_rtl()) ? 'rtl-layout':null?>" style="<?php echo (selected_is_rtl()) ? 'direction:rtl':null?>">

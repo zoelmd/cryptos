@@ -1,0 +1,21 @@
+<div class="container">
+    <div style="margin: 20px 0;display: block">
+        <div class="row">
+
+            <div class="col-md-3 left">
+               <div class="pane menu">
+                   <ul class="nav flex-column">
+                       <li><a class="nav-link ajax-link <?php echo ($type == 'profile') ? 'active' : null?>" href="<?php echo url('settings')?>"><?php _lang('edit-profile')?></a></li>
+                       <li><a class="nav-link ajax-link <?php echo ($type == 'password') ? 'active' : null?>" href="<?php echo url('settings?type=password')?>"><?php _lang('change-password')?></a></li>
+                       <li><a class="nav-link ajax-link <?php echo ($type == 'verification') ? 'active' : null?>" href="<?php echo url('settings?type=verification')?>"><?php _lang('verification')?></a></li>
+                   </ul>
+               </div>
+            </div>
+            <div class="col-md-9 right">
+                <div class="pane pane-white p-3 box">
+                    <?php echo $content?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

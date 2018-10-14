@@ -1,0 +1,50 @@
+<div class="container">
+    <?php if($blogs):?>
+
+        <?php foreach($blogs as $blog):?>
+            <a href="<?php echo blog_url($blog)?>" class="blog ajax-link">
+                <div class="box ">
+                    <h6><?php echo $blog['title']?></h6>
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="image" style="background-image: url(<?php echo blog_logo($blog)?>)"></div>
+                        </div>
+                        <div class="col-sm-9">
+                            <div><?php echo $blog['description']?></div>
+
+                            <div style="display: block;padding: 10px 0;color: grey">
+                                <span style="margin: 10px;display: inline-block"><span class="badge badge-success"><?php echo unique_views('blog', $blog['id'])?></span> <?php _lang('unique-views')?></span>
+                                <span style="margin: 10px;display: inline-block"><span class="badge badge-default"><?php echo $blog['views']?></span> <?php _lang('views')?></span>
+                                <span style="margin: 10px;display: inline-block"><span class="badge badge-default"><?php echo count_comments($blog['id'], 'blog')?></span> <?php _lang('comments')?></span>
+                               <span style="margin: 10px;display: inline-block"> <i class="icons icon-calendar"></i> <?php echo strtolower(format_time($blog['date_created']))?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <?php endforeach?>
+
+        <div class="box">
+            <div class="" style="text-align: center">
+            <span class="btn-group">
+                <?php
+                $offset = input('offset', 0);
+                $previousOffset = ($offset == 0) ? 0 : $offset - 50;
+                $nextoffset = $offset + 50;
+                ?>
+                <a href="<?php echo url('blog')?>?offset=<?php echo $previousOffset?>&term=<?php echo input('term')?>" class="btn btn-sm btn-secondary ajax-link" <?php echo ($offset== 0) ? 'disabled' : null?>><?php _lang('previous')?></a>
+                <a href="<?php echo url('blog')?>?offset=<?php echo $nextoffset?>&term=<?php echo input('term')?>" class="btn btn-sm btn-secondary ajax-link"><?php _lang('next')?></a>
+            </span>
+            </div>
+
+        </div>
+    <?php else:?>
+
+        <div class="box">
+            <div id="empty-post-content" style="text-align: center;padding: 40px  10px;font-size: 15px">
+                <i class="icons icon-pie-chart" style="font-size: 50px;display: block;margin: 10px auto"></i>
+                <?php _lang('no-blog-post')?>
+            </div>
+        </div>
+    <?php endif?>
+</div>

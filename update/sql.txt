@@ -1,0 +1,27 @@
+ALTER TABLE `posts` ADD `post_type` VARCHAR(100) NOT NULL DEFAULT 'coin' AFTER `coin_id`;
+
+ALTER TABLE `coins` ADD `seo_title` TEXT NULL DEFAULT NULL AFTER `features`, ADD `seo_description` TEXT NULL DEFAULT NULL AFTER `seo_title`;
+
+ALTER TABLE `comments` ADD `comment_type` VARCHAR(255) NOT NULL AFTER `post_id`;
+
+
+CREATE TABLE IF NOT EXISTS `unique_views` (
+  `ip` varchar(200) COLLATE utf8_unicode_ci NOT NULL,
+  `view_type` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `type_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS `blogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `views` int(11) NOT NULL DEFAULT '0',
+  `edited_date` int(11) DEFAULT NULL,
+  `date_created` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+

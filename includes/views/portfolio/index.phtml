@@ -1,0 +1,79 @@
+<div class="generic-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <h5><?php _lang('portfolio')?></h5>
+            </div>
+            <div class="col-md-10 " style="position: relative">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link ajax-link  <?php echo ($page == 'me' or $page == 'home') ? 'active' : null?>" href="<?php echo url('portfolio/me')?>">
+                             <?php _lang('portfolio')?>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link ajax-link <?php echo ($page == 'public') ? 'active' : null?>" href="<?php echo url('portfolio/public')?>">
+                            <?php _lang('public-portfolios')?>
+                        </a>
+                    </li>
+
+                </ul>
+                <div class="" style="position: absolute;right: 15px;top: -20px">
+                    <div class="btn-group">
+                        <a href="<?php echo url('portfolio/me')?>" class="btn btn-sm btn-secondary"><?php _lang('my-portfolios')?></a>
+                        <button data-toggle="modal" data-target="#portfolioModal" class="btn btn-primary btn-sm"><i class="icons icon-plus"></i> <?php _lang('portfolio')?></button>
+                    </div>
+                    <div class="modal fade" id="portfolioModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><?php _lang('new-portfolio')?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="" method="post" id="portfolio-form">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label><?php _lang('name')?></label>
+                                            <input type="text" class="form-control" name="name"/>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label><?php _lang('description')?></label>
+                                            <textarea class="form-control" name="desc"></textarea>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <label class="custom-control custom-radio">
+                                                    <input id="radio1" name="privacy" checked value="0" type="radio" class="custom-control-input">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description"><?php _lang('private')?></span>
+                                                </label>
+                                            </div>
+
+                                            <div class="col-sm-6">
+                                                <label class="custom-control custom-radio">
+                                                    <input id="radio1" name="privacy" value="1" type="radio" class="custom-control-input">
+                                                    <span class="custom-control-indicator"></span>
+                                                    <span class="custom-control-description"><?php _lang('public')?></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php echo $content?>

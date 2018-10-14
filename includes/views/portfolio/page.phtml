@@ -1,0 +1,561 @@
+<div class="container">
+<?php
+$coins = get_portfolio_coins($portfolio['id']);
+?>
+<div class="box side-box">
+<div class="title clearfix" style="background: none;padding: 20px 10px">
+    <?php echo $portfolio['name']?>
+    <?php if($portfolio['user_id'] == get_userid()):?>
+        <a href="" data-toggle="modal" data-target="#portfolioEditModal" class="btn btn-sm btn-yellow"><i class="icons icon-pencil"></i> <?php _lang('edit')?></a>
+        <a href="" data-toggle="modal" data-target="#addCoinModal" class="btn btn-sm btn-yellow"><i class="icons icon-plus"></i> <?php _lang('coin')?></a>
+    <?php endif?>
+    <div class="modal fade" id="addCoinModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _lang('add-coin-portfolio')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post" id="portfolio-coin-form">
+                    <input type="hidden" name="id" value="<?php echo $portfolio['id']?>"/>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+
+                                    <div>
+                                        <select name="purchase" required style="width: 100% !important;" class="select2" >
+                                            <?php foreach(get_all_coins() as $dcoin):?>
+                                                <option <?php echo ($dcoin['symbol'] == 'BTC') ? 'selected' : null?> value="<?php echo $dcoin['symbol']?>"><?php echo $dcoin['symbol']?></option>
+                                            <?php endforeach?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                        <div class="input-group-addon">#</div>
+                                        <input placeholder="<?php _lang('amount')?>" required type="text" value="" class="form-control" name="amount"/>
+                                    </div>
+
+                                    <small><?php _lang('number-help-info')?></small>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <input placeholder="<?php _lang('bought-on')?>" required type="text" value="" data-time="true" class="form-control datepicker" name="time"/>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+                                        <div class="input-group-addon"><?php echo config('base_currency', 'USD')?></div>
+                                        <input placeholder="<?php _lang('rate')?>" required type="text" value="" class="form-control" name="rate"/>
+                                    </div>
+
+                                    <small><?php _lang('number-help-info')?></small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="portfolioEditModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _lang('new-portfolio')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="" method="post" id="edit-portfolio-form">
+                    <input type="hidden" name="id" value="<?php echo $portfolio['id']?>"/>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label><?php _lang('name')?></label>
+                            <input type="text" value="<?php echo $portfolio['name']?>" class="form-control" name="name"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _lang('description')?></label>
+                            <textarea class="form-control" name="desc"><?php echo $portfolio['description']?></textarea>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <label class="custom-control custom-radio">
+                                    <input id="radio1" name="privacy" <?php echo ($portfolio['privacy'] == 0) ? 'checked' : null?> value="0" type="radio" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _lang('private')?></span>
+                                </label>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <label class="custom-control custom-radio">
+                                    <input id="radio1" name="privacy" <?php echo ($portfolio['privacy'] == 1) ? 'checked' : null?> value="1" type="radio" class="custom-control-input">
+                                    <span class="custom-control-indicator"></span>
+                                    <span class="custom-control-description"><?php _lang('public')?></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a href="<?php echo portfolio_link($portfolio)?>?delete=true" class="confirm-link btn btn-danger"><?php _lang('delete')?></a>
+                        <button class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="content">
+<?php if(!$coins):?>
+    <div class="porfolio-placeholder">
+        <div id="empty-post-content" style="text-align: center;padding: 20px  10px;font-size: 13px;color: grey">
+            <i class="icons icon-pie-chart" style="font-size: 50px;display: block;margin: 10px auto"></i>
+            <?php _lang('no-portfolio-coin-yet')?>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-md-4">
+            <div class="porfolio-placeholder"></div>
+
+        </div>
+        <div class="col-md-8">
+            <div class="porfolio-placeholder" ></div>
+
+        </div>
+    </div>
+<?php else:?>
+
+    <div class="row">
+    <div class="col-md-6" style="text-align: center">
+        <div class="row">
+            <div class="col-md-6">
+                <div  id="portfolio-overview-chart">
+                    <?php
+
+                    $coins = get_unique_portfolio_coins($portfolio['id']);
+                    $coinLists = array();
+                    foreach($coins as $dcoin) {
+                        $coinLists[] = array(
+                            'coin' => get_coin($dcoin['base']),
+                            'detail' => get_portfolio_coin_detail($portfolio['id'], $dcoin['base'])
+                        );
+                    }
+
+                    ?>
+                    <script>
+
+            function get_portfolio_chart_config() {
+                    var config = {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                                data: [
+                                <?php
+                        foreach($coinLists as $dcoin){
+                            $detail = $dcoin['detail'];
+                            $invest = $detail['total_rate'] * $detail['quantity'];
+                            echo $invest.',';
+                        }?>
+                                 ],
+                                backgroundColor: [
+                                    "#FF8060",
+                                    '#B84FDC',
+                                    '#FF57BC',
+                                    '#72C5E1',
+                                    '#BCDD57'
+                                ]
+                            }],
+
+                            labels: [
+                                        <?php
+                        foreach($coinLists as $dcoin){
+                            $coin = $dcoin['coin'];
+                            $name = $coin['name'].'('.$coin['symbol'].')';
+                            echo "'$name',";
+                        }?>
+                                    ]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'bottom',
+                        display:false
+                    },
+                    title: {
+                        display: true
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }};
+
+                return config;
+                }
+
+
+                </script>
+                    <canvas width="400" height="400" style="width: 250px !important;height: 250px !important;"  id="portfolio-overview-doughnut" class="" />
+                </div>
+
+                <h3>
+                    <?php echo getCurrencySymbol()?>
+                    <?php
+                    $invest = 0;
+                    foreach($coinLists as $dcoin) {
+
+                        $invest += $dcoin['detail']['total_rate'] * $dcoin['detail']['quantity'];
+                    }
+
+                    ?>
+                    <span class="total-invest" data-value="<?php echo $invest?>"><?php echo format_coin_price($invest, false);?></span>
+                </h3>
+                <h4><?php _lang('investment')?></h4>
+            </div>
+
+        <div class="col-md-6" style="text-align: center">
+
+            <div  id="portfolio-worth-chart">
+
+                <script>
+
+            function get_portfolio_worth_chart_config() {
+                    var config = {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                                data: [
+                                <?php
+                    foreach($coinLists as $dcoin){
+                        $detail = $dcoin['detail'];
+                        $worth = $coin['price'] * $detail['quantity'];
+                        echo $worth.',';
+                    }?>
+                                 ],
+                                backgroundColor: [
+                                    "#FF8060",
+                                    '#B84FDC',
+                                    '#FF57BC',
+                                    '#72C5E1',
+                                    '#BCDD57'
+                                ]
+                            }],
+
+                            labels: [
+                                        <?php
+                    foreach($coinLists as $dcoin){
+                        $coin = $dcoin['coin'];
+                        $name = $coin['name'].'('.$coin['symbol'].')';
+                        echo "'$name',";
+                    }?>
+                                    ]
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'bottom',
+                        display:false
+                    },
+                    title: {
+                        display: true
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }};
+
+                return config;
+                }
+
+
+                </script>
+                <canvas width="400" height="400" style="width: 250px !important;height: 250px !important;"  id="portfolio-worth-doughnut" class="" />
+            </div>
+            <h3>
+                <?php echo getCurrencySymbol()?>
+                <?php
+                $worth = 0;
+                foreach($coinLists as $dcoin) {
+
+                    $worth += $dcoin['coin']['price'] * $dcoin['detail']['quantity'];
+                }
+
+                ?>
+                <span class="net-worth"><?php echo format_coin_price($worth, false);?></span>
+            </h3>
+            <h4><?php _lang('networth')?></h4>
+        </div>
+
+            <div class="col-md-6">
+                <div class="stat row" style="background-color: #F6F5F5;color:black;display: block;margin-top:30px;height: auto;min-height: 200px;padding: 20px 0">
+                    <div class="col-sm-12">
+                        <div class="count"><?php echo getCurrencySymbol()?><span class="total-profit"><?php echo format_coin_price($worth - $invest, false);?></span></div>
+                        <div class="text"><?php _lang('profit')?></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="stat row" style="background-color: #F6F5F5;color:black;display: block;margin-top:30px;height: auto;min-height: 200px;padding: 20px 0">
+                    <div class="col-sm-12">
+                        <div class="count"><span class="total-return "><?php echo number_format((($worth - $invest) / $invest) * 100, 0)?></span>%</div>
+                        <div class="text"><?php _lang('return')?></div>
+                    </div>
+                </div>
+            </div>
+
+    </div>
+    </div>
+    <div class="col-md-6">
+        <div class="col-sm-12" id="portfolio-profit-chart">
+
+            <script>
+
+        function get_portfolio_profit_chart_config() {
+                var config = {
+            type: 'bar',
+            data: {
+                datasets: [{
+                 			data: [
+                 			<?php
+                foreach($coinLists as $dcoin){
+                    $detail = $dcoin['detail'];
+                    $worth = $coin['price'] * $detail['quantity'];
+                    echo $worth.',';
+                }?>
+                 			 ],
+                 			backgroundColor: [
+                 				"#FF8060",
+                 				'#B84FDC',
+                 				'#FF57BC',
+                 				'#72C5E1',
+                 				'#BCDD57'
+                 			]
+                 		}],
+
+                 		labels: [
+                        			<?php
+                foreach($coinLists as $dcoin){
+                    $coin = $dcoin['coin'];
+                    $name = $coin['name'].'('.$coin['symbol'].')';
+                    echo "'$name',";
+                }?>
+                        		]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'bottom',
+                    display:false
+                },
+                title: {
+                    display: true
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }};
+
+            return config;
+            }
+
+
+            </script>
+            <canvas width="400" height="400" style="width: 250px !important;height: 250px !important;"  id="portfolio-profit-doughnut" class="" />
+        </div>
+    </div>
+    </div>
+<?php endif?>
+</div>
+</div>
+
+<div class="box">
+    <div class="title clearfix" style="border-radius: 0;position:relative;padding: 0;padding-left: 10px;padding-top:10px;">
+        <ul class="nav nav-tabs" id="home-tab">
+            <li class="nav-item">
+                <a class="nav-link active" href="#lists" data-toggle="tab">
+                    <i class="icons icon-list"></i>
+                    <span><?php _lang('coins')?></span>
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link " href="#transactions" data-toggle="tab">
+                    <i class="icons icon-list"></i>
+                    <span><?php _lang('transactions')?></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="lists" role="tabpanel">
+            <table id="portfolioCoinList"  class="table table-hover  table-coin">
+                <thead>
+                <tr>
+                    <th><?php _lang('coin')?></th>
+                    <th><?php _lang('quantity')?></th>
+                    <th><?php _lang('avg-buy-price')?></th>
+                    <th><?php _lang('current-price')?></th>
+                    <th><?php _lang('investment')?></th>
+                    <th><?php _lang('value')?></th>
+                    <th><?php _lang('profit')?></th>
+                    <th><?php _lang('return')?></th>
+                    <th><?php _lang('transactions')?></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach($coinLists as $dcoin):
+
+                    $coin = $dcoin['coin'];
+                    $coinDetail = $dcoin['detail'];
+                    ?>
+                    <tr data-price="<?php echo format_coin_price($coin['price'],false,false)?>" class="coin-detail-container <?php echo $coin['symbol']?>-detail-container" id="" data-symbol="<?php echo $coin['symbol']?>">
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('coin')?> </div>
+                            <div class="info">
+                                <img style="width: 25px;height: 25px;display: inline-block" src="<?php echo url($coin['logo_small'])?>"/>
+                                <div style="display: inline-block">
+                                    <a class="ajax-link" href="<?php echo url('coin/'.strtolower($coin['symbol']))?>"><strong><?php echo $coin['name']?></strong></a>
+                                    <br/>
+                                    <span style="color: grey"><?php echo $coin['symbol']?></span></div>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('quantity')?> </div>
+                            <div class="info coin-quantity" data-quantity="<?php echo $coinDetail['quantity']?>" >
+                                <?php echo $coinDetail['quantity']?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('avg-buy-price')?> </div>
+                            <div class="info coin-rate" data-rate="<?php $coinDetail['total_rate']?>">
+                                <?php echo format_coin_price($coinDetail['total_rate'] / 2)?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('current-price')?> </div>
+                            <div class="info">
+                                <?php echo getCurrencySymbol()?>
+                                <span class="price" data-value="<?php echo $coin['price']?>"><?php echo format_coin_price($coin['price'],false)?></span>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('investment')?> </div>
+                            <div class="info invest" data-value="<?php echo $coinDetail['total_rate'] * $coinDetail['quantity']?>" >
+                                <?php echo format_coin_price($coinDetail['total_rate'] * $coinDetail['quantity'])?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('value')?> </div>
+                            <div class="info">
+                                <?php echo getCurrencySymbol()?>
+                                <span class="value" data-value="<?php echo $coin['price'] * $coinDetail['quantity']?>"><?php echo format_coin_price($coin['price'] * $coinDetail['quantity'],false)?></span>
+
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('profit')?> </div>
+                            <div class="info">
+                                <?php echo getCurrencySymbol()?>
+                                <span class="profit" data-value="<?php echo ($coin['price'] * $coinDetail['quantity']) - ($coinDetail['total_rate'] * $coinDetail['quantity'])?>"><?php echo format_coin_price(($coin['price'] * $coinDetail['quantity']) - ($coinDetail['total_rate'] * $coinDetail['quantity']),false)?></span>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('return')?> </div>
+                            <div class="info">
+                                <span class="return"><?php echo   number_format(((($coin['price'] * $coinDetail['quantity']) - ($coinDetail['total_rate'] * $coinDetail['quantity']))/($coinDetail['total_rate'] * $coinDetail['quantity'])) * 100, 0)?></span>%
+                            </div>
+                        </td>
+
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('transactions')?> </div>
+                            <div class="info">
+                                <?php echo $coinDetail['coin_count']?>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane" id="transactions" role="tabpanel">
+            <table id="portfolioTransactionList" class="table table-hover  table-coin">
+                <thead>
+                <tr>
+                    <th><?php _lang('market')?></th>
+                    <th><?php _lang('quantity')?></th>
+                    <th><?php _lang('rate')?></th>
+                    <th><?php _lang('cost')?></th>
+                    <th><?php _lang('date')?></th>
+                    <th><?php _lang('total-cost')?></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                <?php foreach(get_portfolio_coins($portfolio['id']) as $transaction):?>
+                    <tr>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('market')?> </div>
+                            <div class="info">
+                                <strong><?php echo $transaction['base'].'/'.$transaction['quote']?></strong>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('quantity')?> </div>
+                            <div class="info">
+                                <?php echo $transaction['amount']?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('rate')?> </div>
+                            <div class="info">
+                                <?php echo $transaction['rate']?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('cost')?> </div>
+                            <div class="info">
+                                <?php echo format_coin_price($transaction['rate'])?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('date')?> </div>
+                            <div class="info">
+                                <?php echo $transaction['date_created']?>
+                            </div>
+                        </td>
+                        <td class="clearfix">
+                            <div class="name"><?php _lang('total-cost')?> </div>
+                            <div class="info">
+                                <?php echo format_coin_price($transaction['rate'] * $transaction['amount'])?>
+                            </div>
+                        </td>
+                        <td>
+                            <a href="<?php portfolio_link($portfolio)?>?transaction=<?php echo $transaction['id']?>" class="confirm-link btn btn-sm btn-yellow"><i class="icons icon-close"></i></a>
+                        </td>
+                    </tr>
+                <?php endforeach?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>

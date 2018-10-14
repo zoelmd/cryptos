@@ -1,0 +1,27 @@
+<div class="<?php echo ($id)? 'box':null?> post-editor">
+    <form action="" method="post" id="post-editor-form">
+        <div class="editor">
+            <textarea name="content" class="form-control emoji-input"></textarea>
+        </div>
+
+        <div class="post-footer clearfix">
+            <button class="btn btn-primary btn-sm" style="text-transform: uppercase"><i class="icons icon-paper-plane"></i> <?php _lang('post')?></button>
+            <?php if(!$id):?>
+                <i class="icons icon-arrow-right-circle" style="display: inline-block;margin: 0 10px"></i>
+                <select name="coin_id" class="select2" id="post-modal-coin">
+                    <?php foreach(get_all_coins() as $coin):?>
+                        <option <?php echo ($coin['symbol']== 'BTC') ?'selected':null?> value="<?php echo $coin['id']?>"><?php echo $coin['symbol']?></option>
+                    <?php endforeach?>
+                </select>
+            <?php else:?>
+                <input type="hidden" name="coin_id" value="<?php echo $id?>"/>
+            <?php endif?>
+            <input type="hidden" name="post_type" value="<?php echo $type?>"/>
+
+            <div class="file-chooser float-right">
+                <input class="post-photo-input" onchange="return validate_image_size(this, 'image')" type="file" name="photo"/>
+                <button class="btn btn-sm btn-secondary "><i class="icons icon-camera"></i></button>
+            </div>
+        </div>
+    </form>
+</div>

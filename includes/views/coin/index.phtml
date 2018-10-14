@@ -1,0 +1,115 @@
+<div data-no-flash="true"
+     data-price="<?php echo format_coin_price($coin['price'],false,false)?>" class=" container coin-detail-container <?php echo $coin['symbol']?>-detail-container" id="" data-symbol="<?php echo $coin['symbol']?>">
+    <?php $currency = getCurrencyDetail()?>
+    <div class="profile-header">
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="profile-avatar-container">
+                    <div class="profile-avatar" style="background-image: url(<?php echo url($coin['logo'])?>"></div>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <div class="info">
+                    <div class="clearfix">
+                        <h1 class="float-left">
+                            <?php echo getCurrencySymbol()?>
+                            <span class="price"><?php echo format_coin_price($coin['price'],false)?></span>
+                        </h1>
+                        <div class="float-right" style="padding-right: 30px">
+                             <span class="change <?php echo (($coin['change_ptc'] > 0)) ? 'change-up' : 'change-down'?>">
+                <i class=" <?php echo (($coin['change_ptc'] > 0)) ? 'icons icon-arrow-up' : 'icons icon-arrow-down'?>"></i>
+                                 <?php echo $coin['change_ptc']?>%</span>
+                        </div>
+                    </div>
+
+                    <div class="row coin-stat-info">
+                        <div class="col-md-3">
+                            <div class="stat">
+                                <span class="title"><?php _lang('market-cap')?></span>
+                                <span class="prices" style="font-weight: 500"><?php echo format_coin_price($coin['market_cap'])?></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="stat">
+                                <span class="title"><?php _lang('volume')?> 24H</span>
+                                <span class="prices" style="font-weight: 500"> <?php echo $coin['volume']?> <?php echo $coin['symbol']?></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="stat">
+                                <span class="title"><?php _lang('open')?> 24H</span>
+                                <span class="prices" style="font-weight: 500"><?php echo format_coin_price($coin['open'])?></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <div class="stat">
+                                <span class="title"><?php _lang('low-high')?></span>
+                                <span class="prices" style="font-weight: 500">
+                                    <?php echo format_coin_price($coin['low'])?> - <?php echo format_coin_price($coin['high'])?>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <ul class="menu">
+                    <li><a href="<?php echo url('coin/'.strtolower($coin['symbol']))?>" class=" ajax-link <?php echo ($page == 'overview') ? 'active' : null?>" href=""><?php _lang('overview')?></a></li>
+                    <li><a href="<?php echo url('coin/'.strtolower($coin['symbol']))?>/market" class=" ajax-link <?php echo ($page == 'market') ? 'active' : null?>" href=""><?php _lang('market')?></a></li>
+                    <li><a href="<?php echo url('coin/'.strtolower($coin['symbol']))?>/trade" class=" ajax-link <?php echo ($page == 'trade') ? 'active' : null?>" href=""><?php _lang('trades')?></a></li>
+                    <li><a href="<?php echo url('coin/'.strtolower($coin['symbol']))?>/forum" class="ajax-link <?php echo ($page == 'forum') ? 'active' : null?>"><?php _lang('forum')?></a></li>
+                    <li><a href="<?php echo url('coin/'.strtolower($coin['symbol']))?>/followers" class="ajax-link <?php echo ($page == 'followers') ? 'active' : null?>"><?php _lang('followers')?></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+           <div class="sidebar__inner">
+               <div class="box">
+                   <a href="<?php echo "https://changelly.com/?ref_id=".config('changelly_id')."&from=".$coin['symbol']."&to=".$coin['symbol'].""?>" class="btn btn-block btn-sm btn-primary"><?php _lang('buy')?> <?php echo $coin['symbol']?></a>
+                   <a href="<?php echo "https://changelly.com/?ref_id=".config('changelly_id')."&from=".$coin['symbol']."&to=".$coin['symbol'].""?>" class="btn btn-block btn-sm btn-danger"><?php _lang('sell')?> <?php echo $coin['symbol']?></a>
+               </div>
+               <?php if($coin['website']):?>
+                   <div class="box">
+                       <a href="<?php echo $coin['website']?>" onclick="return window.open('<?php echo $coin['website']?>')" class="btn btn-sm btn-secondary btn-block"><?php _lang('visit-website')?></a>
+                   </div>
+               <?php endif?>
+               <div class="box">
+                   <div style="text-align: center;">
+                       <?php echo view('main::user/follow', array('typeId' => $coin['id'], 'type' => 'coin'))?>
+                   </div>
+               </div>
+               <div class="box">
+
+
+                   <div class="clearfix">
+                       <div class="title">
+                           <strong><?php _lang('followers')?></strong>
+                           <a href="<?php echo url('coin/'.strtolower($coin['symbol']).'/followers')?>" class="float-right ajax-link"><?php _lang('view-all')?></a>
+                       </div>
+
+                       <?php foreach(get_followers($coin['id'], 'coin', 10) as $user):?>
+                           <a style="display: inline-block;margin: 2px" href="<?php echo profile_link($user)?>" class="tool-tip ajax-link" title="<?php echo $user['username']?> : <?php echo $user['point']?> <?php _lang('points')?>">
+                               <img style="width: 40px;height: 40px;border-radius: 100px" class="d-flex mr-3" src="<?php echo get_avatar(75, $user)?>" >
+                           </a>
+                       <?php endforeach?>
+                   </div>
+               </div>
+
+               <?php if(config('side_ads', false)):?>
+                   <div class="box">
+                       <?php echo config('side_ads', '')?>
+                   </div>
+               <?php endif?>
+           </div>
+        </div>
+        <div class="col-md-9">
+            <?php echo $content?>
+        </div>
+    </div>
+</div>

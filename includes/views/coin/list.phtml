@@ -1,0 +1,83 @@
+
+<?php $columns = my_table_columns(); foreach($coins as $coin):?>
+    <tr data-price="<?php echo format_coin_price($coin['price'],false,false)?>" class="coin-detail-container <?php echo $coin['symbol']?>-detail-container" id="" data-symbol="<?php echo $coin['symbol']?>">
+        <?php foreach($columns as $column):?>
+        <?php if($column == 'name'):?>
+        <td class="clearfix">
+
+            <div class="name"><?php _lang('cryptocurrency')?> </div>
+            <div class="info">
+                <img style="width: 25px;height: 25px;display: inline-block;margin-right: 10px" src="<?php echo url($coin['logo_small'])?>"/>
+                <div style="display: inline-block">
+                    <a class="ajax-link" href="<?php echo url('coin/'.strtolower($coin['symbol']))?>"><?php echo $coin['name']?></a>
+
+                    <sup style="color: grey"><?php echo $coin['symbol']?></sup></div>
+            </div>
+        </td>
+
+            <?php endif?>
+
+        <?php if($column == 'price'):?>
+        <td class="clearfix">
+            <div class="name"><?php _lang('price')?> </div>
+           <div class="info" style="position: relative">
+               <sup style="position: absolute;top: 0px;left: -15px"><?php echo getCurrencySymbol()?></sup>
+               <span class="price"><?php echo format_coin_price($coin['price'],false)?></span>
+           </div>
+        </td>
+            <?php endif?>
+        <?php if($column == 'change_ptc'):?>
+        <td class="clearfix">
+            <div class="name"><?php _lang('change')?> </div>
+            <div class="info">
+<span class="change <?php echo (($coin['change_ptc'] > 0)) ? 'change-up' : 'change-down'?>">
+                <i class=" <?php echo (($coin['change_ptc'] > 0)) ? 'icons icon-arrow-up-circle' : 'icons icon-arrow-up-circle'?>"></i>
+    <?php echo $coin['change_ptc']?>%</span>
+            </div>
+
+        </td>
+            <?php endif?>
+        <?php if($column == 'supply'):?>
+        <td class="clearfix">
+            <div class="name"><?php _lang('supply')?> </div>
+            <div class="info">
+                <?php echo formatNumber($coin['supply'], 2)?> <?php echo $coin['symbol']?>
+            </div>
+        </td>
+            <?php endif?>
+        <?php if($column == 'volume'):?>
+        <td class="clearfix">
+            <div class="name"><?php _lang('volume')?> </div>
+            <div class="info">
+                <?php echo formatNumber($coin['volume'],2)?> <?php echo $coin['symbol']?>
+            </div>
+        </td>
+            <?php endif?>
+        <?php if($column == 'market_cap'):?>
+            <td class="clearfix">
+                <div class="name"><?php _lang('market-cap')?> </div>
+                <div class="info" style="position: relative">
+                    <sup style="position: absolute;top: 0px;left: -15px"><?php echo getCurrencySymbol()?></sup>
+                    <span><?php echo formatNumber($coin['market_cap'],2)?></span>
+                </div>
+            </td>
+        <?php endif?>
+
+        <?php if($column == '24h_performance'):?>
+        <td>
+                <span class="sparkline-charts" data-width="130px" values="<?php echo get_coin_line_data($coin['symbol'])?>"></span>
+        </td>
+            <?php endif?>
+
+        <?php if($column == 'action'):?>
+            <td>
+                <div class="btn-group">
+                    <a style="font-size: 10px;padding: 4px" href="<?php echo "https://changelly.com/?ref_id=".config('changelly_id')."&from=".$coin['symbol']."&to=".$coin['symbol'].""?>" class="btn btn-sm btn-success"><?php _lang('buy')?></a>
+                    <a style="font-size: 10px;padding: 4px" href="<?php echo "https://changelly.com/?ref_id=".config('changelly_id')."&from=".$coin['symbol']."&to=".$coin['symbol'].""?>" class="btn btn-sm btn-secondary"><?php _lang('sell')?></a>
+                </div>
+            </td>
+
+        <?php endif?>
+        <?php endforeach?>
+    </tr>
+<?php endforeach?>

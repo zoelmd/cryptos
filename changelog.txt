@@ -1,0 +1,84 @@
+---Version 1.3.1------
+---New Features-----
+
+-- Added a button to start thread in the forum
+-- Added start trading to exchanges list
+
+---Bug Fixes------
+-- Fixed little error in the installation process caused by last update
+-- Fixed ?login=true to automatically open the login modal
+-- Fixed coins on the homepage topography not live
+-- Fixed account activation not working, its due to hash algorithm used before
+
+----Files touched-------
+-- includes/application.php
+-- includes/Controllers/HomeController.php
+-- includes/models/user.php
+-- includes/models/crypto.php
+-- includes/routes.php
+
+-- includes/views/includes/footer.phtml
+-- includes/views/home/index.phtml
+-- includes/views/home/forum.phtml
+-- includes/views/home/exchanges.phtml
+-- includes/views/coin/market.phtml
+-- includes/views/post/editor.phtml
+-- includes/views/admin/settings.phtml
+
+-- styles/default/js/script.js
+-- All language files are touched to update translation at languages/
+-- languages/en.php e.t.c
+
+
+
+
+---Version 1.3------
+-- Added Exchanges
+-- Added user Portfolio to track their coins
+-- Added user accoun activation by mail
+-- Improved design
+-- Added sitemap in different format html,xml and txt
+--Added support for BTC,ETH and LTC as Fiat currency
+-- Added markets, trades to each coin page
+-- Added auto detect of visitor country currency using usercountry.com API
+-- Aded new Language support
+-- Added Menu manager in admin panel
+-- Added page manager to create dynamic pages
+-- Added option to disable / enable auto download of new coins
+-- Added 24H performance sparkline chart
+-- Added ability to arrange coin table columns with drag and sort
+-- Make cryptocurrency converter support both sides converting
+
+----BUG FIXES-----
+-- Fixed issue with registration when disabled
+- Fixed issue with recent update responsiveness
+- Hidden coins are now removed from calculations
+- Fixed search requiring login
+- Fixed trending coins on homepage when more coin added
+- Fixed saving of coin issue
+- Fixed other currency symbol overlapping prices
+- Fixed ability to write empty comment
+- Fixed logo not changing from admin panel
+- Fixed point issue
+---Version 1.2-------
+
+<li>-- Changed news feed to forum (That's the proper term )</li>
+<li>-- Redesign the forum  page with tab support for coin forum, latest posts</li>
+<li>-- Improved the coin SEO , you can now set title,description and og meta tags like type,image,url e.t.c are set correctly</li>
+<li>-- Change Font family to Google font 'Noto' looking more awesome</li>
+<li>-- Added blog system</li>
+<li>-- Added cryptocurrency converter calculator</li>
+<li>-- Added trending to homepage with option to select which coins should show</li>
+<li>-- Added donate button</li>
+<li>-- Added buy and sell button to coin page and table list</li>
+<li>-- Improved design</li>
+
+
+-----BUG FIXES------
+
+-- Fixed issue with cron job
+
+
+----Version 1.0-------------------------------
+
+- Initial Release

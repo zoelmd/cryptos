@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="box">
+        <h6><?php echo $blog['title']?></h6>
+
+        <div style="display: block;padding: 10px 0">
+            <span style="margin: 10px;display: inline-block"><span class="badge badge-success"><?php echo unique_views('blog', $blog['id'])?></span> <?php _lang('unique-views')?></span>
+            <span style="margin: 10px;display: inline-block"><span class="badge badge-default"><?php echo $blog['views']?></span> <?php _lang('views')?></span>
+            <span style="margin: 10px;display: inline-block"> <i class="icons icon-calendar"></i> <?php echo strtolower(format_time($blog['date_created']))?></span>
+        </div>
+    </div>
+
+    <div class="box">
+        <?php echo output_text($blog['content'], array('html' => true, 'length' => 500, 'more' => false))?>
+    </div>
+    <div class="box side-box">
+        <div class="title"><?php _lang('comments')?> (<?php echo count_comments($blog['id'], 'blog')?>)</div>
+        <div class="content">
+            <div class="comments">
+
+
+                <div class="comment-form clearfix">
+
+                    <form data-id="<?php echo $blog['id']?>" data-type="blog" class="clearfix comment-form-<?php echo $blog['id']?>" action="" method="post">
+                        <textarea autocomplete="off" placeholder="<?php _lang('add-a-comment')?>"  name="comment" class="form-control"></textarea>
+                        <button class="btn btn-sm btn-primary" style="margin-top: 20px;display: block"><?php _lang('add-comment')?></button>
+                    </form>
+
+                </div>
+
+                <div id="blog-comments" style="background: #F0F0F0;display: block;margin-top: 10px;padding: 10px;border-radius: 5px">
+                    <?php if(count_comments($blog['id'], 'blog') > config('comment-per-page', 5)):?>
+                        <a class="load-more-comment" data-id="<?php echo $blog['id']?>" data-type="blog" data-offset="0" href="" style="display: block;margin: 10px 0"><?php _lang('load-more-comments')?></a>
+                    <?php endif?>
+                    <div  class="comments-list comments-lists-<?php echo $blog['id']?>">
+
+                        <?php foreach(array_reverse(get_comments($blog['id'], 'blog')) as $comment):?>
+                            <?php echo view('main::post/comment', array('comment' => $comment))?>
+                        <?php endforeach?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

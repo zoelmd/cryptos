@@ -1,0 +1,58 @@
+
+<div class="clearfix">
+    <div class="float-left">
+        <h5><?php _lang('users-management')?></h5>
+    </div>
+    <div class="float-right">
+        <form action="" method="get">
+            <input name="term" value="<?php echo input('term')?>" type="text" class="form-control-sm" placeholder="<?php _lang('search-member')?>"/>
+            <button class="btn btn-sm btn-primary"><i class="icons icon-magnifier"></i></button>
+        </form>
+    </div>
+</div>
+<table class="table" >
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th><?php _lang('username')?></th>
+            <th><?php _lang('full-name')?></th>
+            <th><?php _lang('email-address')?></th>
+            <th><?php _lang('active')?></th>
+            <th><?php _lang('options')?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($users as $user):?>
+            <tr>
+                <td><?php echo $user['id']?></td>
+                <td>
+                    <a href="<?php echo profile_link($user)?>">
+                        <img src="<?php echo get_avatar(75, $user)?>" style="width: 20px;height:20px;border-radius:100px"/> <?php echo $user['username']?>
+                    </a>
+                </td>
+                <td><?php echo $user['full_name']?></td>
+                <td><?php echo $user['email']?></td>
+                <td><span class="badge badge-info"><?php echo ($user['active']) ? lang('yes') : lang('no')?></span></td>
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-sm btn-secondary ajax-link" href="<?php echo url('admincp/user/edit?id='.$user['id'])?>"><i class="icons icon-pencil"></i></a>
+                        <a class="btn btn-sm btn-secondary " href="<?php echo url('admincp/user/edit?type=delete&id='.$user['id'])?>"><i class="icons icon-close"></i></a>
+                    </div>
+
+                </td>
+            </tr>
+        <?php endforeach?>
+    </tbody>
+</table>
+
+<div class="" style="text-align: center">
+            <span class="btn-group">
+                <?php
+                $offset = input('offset', 0);
+                $previousOffset = ($offset == 0) ? 0 : $offset - 50;
+                $nextoffset = $offset + 50;
+                ?>
+                <a href="<?php echo url('admincp/users')?>?offset=<?php echo $previousOffset?>&term=<?php echo input('term')?>" class="btn btn-secondary ajax-link" <?php echo ($offset== 0) ? 'disabled' : null?>><?php _lang('previous')?></a>
+                <a href="<?php echo url('admincp/users')?>?offset=<?php echo $nextoffset?>&term=<?php echo input('term')?>" class="btn btn-secondary ajax-link"><?php _lang('next')?></a>
+            </span>
+</div>

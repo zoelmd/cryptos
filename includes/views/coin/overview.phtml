@@ -1,0 +1,306 @@
+<?php $currency = getCurrencyDetail()?>
+<div class="box">
+    <script>
+                  function formatLegendValue(graphDataItem, valueText) {
+                    return '<?php echo $currency['symbol']?>' + valueText;
+                  }
+                    function init_coin_chart() {
+                        var primaryColor = '#6600CC';
+                        var secondaryColor = '#DD9A57';
+                        var chart;
+                      var chartOptions = {
+                        type: 'stock',
+
+                        categoryAxesSettings: {
+                          minPeriod: 'DD',
+                          color: secondaryColor,
+                          gridColor: primaryColor, // vertical grid color
+                          gridAlpha: 0.1,
+                          gridThickness: 1,
+                          equalSpacing: true // skip time gaps
+                        },
+
+                        dataSets: [{
+                          title: '<?php echo $coin['symbol']?>',
+                          fieldMappings: [{
+                            fromField: 'value',
+                            toField: 'value'
+                          }, {
+                            fromField: 'volume',
+                            toField: 'volume'
+                          }],
+                          categoryField: 'date'
+                        }],
+
+                        panelsSettings: {
+                          usePrefixes: true,
+                          creditsPosition: 'bottom-left'
+                        },
+
+                        panels: [{
+                          showCategoryAxis: true,
+                          title: 'Price',
+                          percentHeight: 70,
+                          precision: 2,
+                          drawingIconsEnabled: true,
+                          eraseAll: true,
+                          eraseAll:!0,
+                          stockGraphs: [ {
+                            id: 'g1',
+                            type: 'smoothedLine',
+                            valueField: 'value',
+                            lineColor: primaryColor,
+                            fillAlphas: 0.15,
+                            lineThickness: 2,
+                            comparable: true,
+                            compareField: 'value',
+                            balloonText: '[[title]]: <b>' + '<?php echo $currency['symbol']?>' + '[[value]]</b>',
+                            compareGraphBalloonText: '[[title]]: <b>' + '<?php echo $currency['symbol']?>' + '[[value]]</b>',
+                            useDataSetColors: false
+                          }],
+                          stockLegend: {
+                            periodValueTextComparing: '[[percents.value.close]]%',
+                            periodValueTextRegular: '[[value.close]]',
+                            color: secondaryColor,
+                            valueFunction: formatLegendValue,
+                            numberFormatter: {precision:-1, decimalSeparator:'.', thousandsSeparator:','}
+                          },
+                          valueAxes: [{
+                            position: 'right',
+                            color: secondaryColor, // color of values
+                            gridColor: primaryColor, //horizontal grid line color
+                            gridAlpha: 0.1,
+                            gridThickness: 1
+                          }]
+                        }, {
+                          title: '<?php _lang('volume')?>',
+                          percentHeight: 30,
+                          precision: 0,
+                          stockGraphs: [ {
+                            valueField: 'volume',
+                            type: 'column',
+                            showBalloon: false,
+                            lineColor: primaryColor,
+                            fillAlphas: 0.3,
+                            useDataSetColors: false
+                          } ],
+                          stockLegend: {
+                            periodValueTextRegular: '[[value.close]]',
+                            valueFunction: formatLegendValue,
+                            numberFormatter: {precision:-1, decimalSeparator:'.', thousandsSeparator:','}
+                          },
+                          valueAxes: [{
+                            position: 'right',
+                            gridColor: primaryColor, //horizontal grid line color
+                            gridAlpha: 0.1,
+                            gridThickness: 1
+                          }]
+                        }],
+
+                        chartScrollbarSettings: {
+                          graph: 'g1',
+                          graphFillColor: primaryColor,
+                          graphFillAlpha: 0.4,
+                          selectedGraphFillColor: primaryColor,
+                          selectedGraphFillAlpha: 1
+                        },
+
+                        chartCursorSettings: {
+                          valueBalloonsEnabled: true,
+                          graphBulletSize: 1,
+                          valueLineBalloonEnabled: true,
+                          valueLineEnabled: true,
+                          valueLineAlpha: 1,
+                          categoryBalloonColor: primaryColor,
+                          categoryBalloonAlpha: 0.8,
+                          cursorColor: primaryColor,
+                          cursorAlpha: 0.8
+                        },
+
+                        periodSelector: {
+                          position: 'top',
+                          periodsText: '',
+                          inputFieldsEnabled: false, //disable dates input
+                          periods: [
+                          {
+                            period: 'DD',
+                            count: 1,
+                            label: '1D'
+                          },{
+                            period: 'DD',
+                            count: 7,
+                            label: '1W',
+                            selected: true
+                          },{
+                            period: 'MM',
+                            count: 1,
+                            label: '1M'
+                          },{
+                            period: 'MM',
+                            count: 3,
+                            label: '3M'
+                          },{
+                            period: 'MM',
+                            count: 6,
+                            label: '6M'
+                          },{
+                            period: 'YYYY',
+                            count: 1,
+                            label: '1Y'
+                          }, {
+                            period: 'MAX',
+                            label: '<?php _lang('all')?>'
+                          }]
+                        },
+
+                        dataSetSelector: {
+                          position: '' // leave empty to hide the native dataSet selection control
+                        },
+
+                        comparedDataSets: [],
+
+                        export: {
+                          enabled: true
+                        },
+
+                        listeners: [{
+                          event: 'init',
+                          method: function () {
+                            // add chart background image when the chart is initialized
+                            $('#coin-chart-container').find('.amcharts-stock-panel-div-stockPanel0 .amcharts-main-div')
+                              .prepend('<div style="background: url(<?php echo url($coin['logo'])?>) no-repeat center center; position: absolute; width: 100%; height: 100%; opacity: 0.18;"></div>');
+                          }
+                        }]
+                      };
+
+                        chart = AmCharts.makeChart('coin-chart-container', chartOptions);
+                        SYMBOL = '<?php echo $coin['symbol']?>';
+                        //return false;
+                        $('#coin-chart-preloader').fadeIn();
+                      $.getJSON(baseUrl + 'load/history?symbol=' + SYMBOL, function (response) {
+                        $('#coin-chart-preloader').fadeOut();
+                        if (typeof response != 'undefined') {
+                              chart.dataSets[0].dataProvider = response;
+                              chart.validateData();
+
+                            var $table = $('.historical-data-table');
+                            var $tbody = $table.find('tbody');
+                            $tbody.html('')
+                            var history = response;
+                            var n = history.length;
+                            for (var i=0; i<n; i++) {
+                              if (history[i].value > 0) {
+                                $tbody.append('<tr>' +
+                                  '<td>' + history[i].date_fmt + '</td>' +
+                                  '<td class="right-align"><sup><?php echo getCurrencySymbol()?></sup>' + history[i].value_fmt + '</td>' +
+                                  '<td class="right-align" data-order="' + history[i].volume + '">' + history[i].volume_fmt + ' <?php echo $coin['symbol']?></td>' +
+                                  '</tr>');
+                              }
+                            }
+                            $('.historical-data-table').DataTable(15, [[0, 'desc']]);
+                        }
+                        //chartRemoveLoadingState();
+                      });
+                    }
+                </script>
+    <div id="coin-chart" class="coin-chart">
+        <div id="coin-chart-preloader" style="position: absolute;height: 100%;width: 100%;display:none">
+            <div class="css-loader" style="margin: 20% auto"></div>
+        </div>
+        <div id="coin-chart-container"></div>
+    </div>
+</div>
+
+<div class="box">
+    <ul class="nav nav-tabs profile-nav-tabs">
+        <li class="nav-item">
+            <a data-toggle="tab" href="#info" role="tab" class="nav-link active" ><?php _lang('details')?></a>
+        </li>
+        <li class="nav-item">
+            <a data-toggle="tab" href="#indicators" role="tab" class="nav-link" ><?php _lang('key-indicators')?></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#history" role="tab"><?php _lang('historical-price')?></a>
+        </li>
+    </ul>
+
+    <div class="tab-content" style="padding: 0  20px;display: block">
+        <div class="tab-pane active" id="info" role="tabpanel">
+            <h6 style="margin-top:20px;display: block"><?php _lang('description')?></h6>
+            <p>
+                <?php echo $coin['description']?>
+            </p>
+            <?php if($coin['features']):?>
+                <h6><?php _lang('features')?></h6>
+                <p>
+                    <?php echo $coin['features']?>
+                </p>
+            <?php endif?>
+
+            <?php if($coin['tech']):?>
+                <h6><?php _lang('technology')?></h6>
+                <p>
+                    <?php echo $coin['tech']?>
+                </p>
+            <?php endif?>
+        </div>
+        <div class="tab-pane" id="indicators" role="tabpanel">
+            <table style="margin-top: 20px;width: 100%" class="table table-condensed">
+                <tbody>
+                    <tr>
+                        <td><strong><?php _lang('mkt-cap')?></strong></td>
+                        <td><sup><?php echo getCurrencySymbol()?></sup>
+                            <?php echo formatNumber($coin['market_cap'])?></td>
+                        <td><strong><?php _lang('volume')?> 24H</strong></td>
+                        <td><?php echo formatNumber($coin['volume'])?> <?php echo $coin['symbol']?></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong><?php _lang('market-share')?></strong></td>
+                        <td>
+                            <?php echo get_coin_market_share($coin)?>%</td>
+                        <td><strong><?php _lang('total-supply')?> 24H</strong></td>
+                        <td><?php echo formatNumber($coin['total_supply'])?> <?php echo $coin['symbol']?></td>
+                    </tr>
+
+                    <tr>
+                        <td><strong><?php _lang('proof-type')?></strong></td>
+                        <td>
+                            <?php echo $coin['proof_type']?></td>
+                        <td><strong><?php _lang('open')?> </strong></td>
+                        <td>
+                            <sup><?php echo getCurrencySymbol()?></sup>
+                            <?php echo formatNumber($coin['open'])?>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><strong><?php _lang('low')?></strong></td>
+                        <td>
+                            <sup><?php echo getCurrencySymbol()?></sup>
+                            <?php echo formatNumber($coin['low'])?>
+                        </td>
+                        <td><strong><?php _lang('high')?> </strong></td>
+                        <td>
+                            <sup><?php echo getCurrencySymbol()?></sup>
+                            <?php echo formatNumber($coin['high'])?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane" id="history" role="tabpanel">
+            <table  class="table table-stripped historical-data-table">
+                <thead>
+                <tr>
+                    <th><?php _lang('date')?></th>
+                    <th class="right-align"><?php _lang('price')?></th>
+                    <th class="right-align"><?php _lang('volume')?></th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+</div>

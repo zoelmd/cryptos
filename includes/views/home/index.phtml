@@ -1,0 +1,609 @@
+<div class="topography">
+    <div class="cover"></div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="info-text"><strong style="font-weight: bolder !important;"><?php echo config('site-title', 'TCrypto')?></strong> <?php _lang('site-welcome-text')?></h5>
+
+                <?php if(config('bitcoin_info') or config('ethereum_info') or config('litecoin_info')):?>
+                    <a href="" data-toggle="modal" data-target="#donateModal" class="btn btn-primary btn-sm"><?php _lang('donate')?></a>
+                    <div class="modal fade" id="donateModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><?php _lang('donate-coins')?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+                                <div class="modal-body">
+                                    <ul>
+                                        <li><?php _lang('donate-bitcoin')?> : <strong><?php echo config('bitcoin_info')?></strong> </li>
+                                        <li><?php _lang('donate-ethereum')?> : <strong><?php echo config('ethereum_info')?></strong> </li>
+                                        <li><?php _lang('donate-litecoin')?> : <strong><?php echo config('litecoin_info')?></strong> </li>
+                                    </ul>
+                                </div>
+
+                                <div class="modal-footer">
+
+                                    <button  class="btn btn-primary btn-sm" data-dismiss="modal"><?php _lang('close')?></button>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    </div>
+                <?php endif?>
+
+                <?php if(!is_loggedin() and config('enable-signup', true)):?>
+                    <a data-toggle="modal" data-target="#signupModal" style="display: inline-block;margin-left: 10px" href="" class="btn btn-yellow-outline btn-sm"><?php _lang('become-a-member')?></a>
+                <?php endif?>
+            </div>
+            <div class="col-md-6">
+                <div class="top-coin-topo float-right">
+                    <?php $dcoins = explode(',',config('topo-top-coins', 'BTC,ETH,LTC'));?>
+                    <ul>
+                        <?php $i=1; foreach($dcoins as $coin):?>
+                            <?php if($i <= 3):?>
+                                <?php $coin = get_coin($coin);?>
+                                <li data-no-flash="true" data-price="<?php echo format_coin_price($coin['price'],false,false)?>" class="coin-detail-container <?php echo $coin['symbol']?>-detail-container" id="" data-symbol="<?php echo $coin['symbol']?>" >
+
+                                    <div class="clearfix" >
+                                        <div class="float-left">
+                                            <a href="<?php echo coin_link($coin)?>" class="ajax-link">
+                                                <img style="width: 25px;height: 25px;display: inline-block;border-radius: 100px;margin-right:10px" src="<?php echo url($coin['logo_small'])?>"/>
+                                                <strong><?php echo $coin['name']?></strong>
+                                            </a>
+                                        </div>
+                                        <div class="float-right">
+                                            <?php echo getCurrencySymbol()?>
+                                            <span class="price"><?php echo format_coin_price($coin['price'],false)?></span>
+                                        </div>
+                                    </div>
+                                    <div class="sparkline-charts" data-width="100%" values="<?php echo get_coin_line_data($coin['symbol'])?>"></div>
+                                </li>
+                                <?php endif?>
+                        <?php $i++; endforeach?>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="lg-pane " >
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+
+
+                <div class="jcarousel-wrapper">
+                    <div id="featured-coins" class="jcarousel" >
+                        <ul>
+                            <?php foreach(get_featured_coins() as $coin):?>
+                                <li >
+                                    <a href="<?php echo url('coin/'.strtolower($coin['symbol']))?>"
+                                       data-no-flash="true" data-price="<?php echo format_coin_price($coin['price'],false,false)?>" class=" clearfix ajax-link coin-detail-container <?php echo $coin['symbol']?>-detail-container" id="" data-symbol="<?php echo $coin['symbol']?>"
+                                        >
+                                        <div><strong><?php echo $coin['name']?></strong></div>
+
+                               <span class="change <?php echo (($coin['change_ptc'] > 0)) ? 'change-up' : 'change-down'?>">
+                <i class=" <?php echo (($coin['change_ptc'] > 0)) ? 'icons icon-arrow-up' : 'icons icon-arrow-down'?>"></i>
+                                   <?php echo $coin['change_ptc']?>%</span>
+                                        <div class="prices" style="color: grey !important;">
+                                            <?php echo getCurrencySymbol()?>
+                                            <span class="price"><?php echo format_coin_price($coin['price'],false)?></span>
+                                        </div>
+                                        <div class="volume" style="color: grey !important;">
+                                            V : <?php echo getCurrencySymbol()?> <?php echo formatNumber($coin['volume'])?>
+                                        </div>
+                                    </a>
+
+                                </li>
+                            <?php endforeach?>
+                        </ul>
+                    </div>
+
+                    <a href="#" class="jcarousel-control-prev">&lsaquo;</a>
+                    <a href="#" class="jcarousel-control-next">&rsaquo;</a>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div class="" style="margin-top: 15px" >
+            <?php if(config('top_ads', false)):?>
+                <?php echo config('top_ads', '')?>
+            <?php endif?>
+        </div>
+
+    </div>
+</div>
+
+<div class="lg-pa">
+    <div class="container">
+
+
+
+        <div class="box side-box" style="">
+            <div class="title clearfix" style="border-radius: 0;position:relative;padding: 0;padding-left: 10px;padding-top:10px;">
+                <ul class="nav nav-tabs" id="home-tab">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#lists" data-toggle="tab">
+                            <i class="icons icon-list"></i>
+                            <span><?php _lang('lists')?></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " href="#trending" data-toggle="tab">
+                            <i class="icons icon-diamond"></i>
+                            <span><?php _lang('trending')?></span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="#risers" data-toggle="tab">
+                            <i class="icons icon-fire"></i>
+                            <span><?php _lang('gainer-loosers')?></span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link " href="#converter" data-toggle="tab">
+                            <i class="icons icon-calculator"></i>
+                            <span><?php _lang('currency-converter')?></span>
+                        </a>
+                    </li>
+
+
+
+                    <!--<li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                            <?php _lang('tools')?>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="#converter" data-toggle="tab" class="dropdown-item"><?php _lang('currency-converter-calculator')?></a>
+                            </li>
+                            <li>
+                                <a href="#widgets" data-toggle="tab" class="dropdown-item"><?php _lang('website-widgets')?></a>
+                            </li>
+                        </ul>
+                    </li>-->
+                </ul>
+                <div class=" dropdown" style="position: absolute;right: 10px;top: 20px">
+                    <?php _lang('filter')?>:
+                    <a href="<?php echo url('market')?>?limit=<?php echo $limit?>&order=<?php echo $order?>&order_type=<?php echo $orderType?>" class="dropdown-toggle btn btn-sm btn-secondary" data-toggle="dropdown"><?php echo $limit?></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li class="">
+                            <a class="ajax-link dropdown-item" href="<?php echo url('market')?>?limit=10&order=<?php echo $order?>&order_type=<?php echo $orderType?>">10</a>
+
+                        </li>
+                        <li class="">
+                            <a class="ajax-link dropdown-item" href="<?php echo url('market')?>?limit=50&order=<?php echo $order?>&order_type=<?php echo $orderType?>">50</a>
+                        </li>
+                        <li class="">
+                            <a class="ajax-link dropdown-item" href="<?php echo url('market')?>?limit=100&order=<?php echo $order?>&order_type=<?php echo $orderType?>">100</a>
+                        </li>
+                        <li class="">
+                            <a class="ajax-link dropdown-item" href="<?php echo url('market')?>?limit=200&order=<?php echo $order?>&order_type=<?php echo $orderType?>">200</a>
+                        </li>
+                        <li class="">
+                            <a class="ajax-link dropdown-item" href="<?php echo url('market')?>?limit=500&order=<?php echo $order?>&order_type=<?php echo $orderType?>">500</a>
+                        </li>
+                        <li class="">
+                            <a class="ajax-link dropdown-item" href="<?php echo url('market')?>?limit=1000&order=<?php echo $order?>&order_type=<?php echo $orderType?>">1000</a>
+                        </li>
+                    </ul>
+                    <div class="modal fade" id="columnModal">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"><?php _lang('customize-table-column')?></h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <form action="" method="post" id="columns-form">
+                                <div class="modal-body">
+
+                                        <div class="columns-list">
+                                            <?php $myColumns = my_table_columns(); foreach($myColumns as $column):?>
+                                                <div class="each-column" style="padding: 5px;border: solid 1px #ECECEC;border-radius:3px;display: block;margin: 5px 0">
+                                                    <input class="toggle-one" <?php echo (in_array($column, $myColumns)) ? 'checked' : null?> data-size="mini" data-style="ios" name="columns[<?php echo $column?>]" value="1" type="checkbox" checked  data-on="<i></i>" data-off="<i></i>" data-onstyle="info" data-offstyle="secondary" >
+                                                    <?php _lang($column)?>
+                                                </div>
+                                            <?php endforeach?>
+
+                                            <?php  foreach(available_table_columns() as $column):?>
+                                                <?php if(!in_array($column, $myColumns)):?>
+                                                    <div class="each-column" style="padding: 5px;border: solid 1px #ECECEC;border-radius:3px;display: block;margin: 5px 0">
+                                                        <input class="toggle-one" data-size="mini" data-style="ios" name="columns[<?php echo $column?>]" value="1" type="checkbox"   data-on="<i></i>" data-off="<i></i>" data-onstyle="info" data-offstyle="secondary" >
+                                                        <?php _lang($column)?>
+                                                    </div>
+                                                    <?php endif?>
+                                            <?php endforeach?>
+                                        </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary btn-sm"><?php _lang('save-changes')?></button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="" data-toggle="modal" data-target="#columnModal" class="btn btn-sm btn-primary"><i class="icons icon-list"></i></a>
+                </div>
+            </div>
+            <div class="tab-content">
+                <div class="tab-pane " id="converter">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <div class="currency-converter"  style="margin-bottom:30px">
+                                <h6 class="head"><?php _lang('cryptocurrency-converter-calculator')?></h6>
+                                <div class="row">
+                                    <div class="col-sm-5">
+                                        <input onkeyup="do_calculator()" type="text" class="form-control converter-from-left" />
+                                        <span class=" answer-right answer"></span>
+                                    </div>
+                                    <div class="col-sm-2">
+
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <select onchange="do_calculator()" class="form-control select2 from" style="width: 100% !important;">
+                                            <?php foreach(get_all_coins() as $coin):?>
+                                                <option <?php echo ($coin['symbol'] == 'BTC') ? 'selected' : null?> value="<?php echo $coin['symbol']?>"><?php echo $coin['symbol']?></option>
+                                            <?php endforeach?>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-5" style="padding: 20px 0">
+
+                                    </div>
+                                    <div class="col-sm-2">
+
+                                    </div>
+                                    <div class="col-sm-5" style="text-align: left">
+                                        <a id="calculator-switch" href="" onclick="return change_calculator(this)" data-type="left" class="btn btn-secondary btn-sm" style="padding: 5px;margin: auto;display: inline-block"><i class="icons icon-arrow-down-circle"></i></a>
+                                    </div>
+
+                                    <div class="col-sm-5" >
+                                        <input onkeyup="do_calculator()" style="display: none" type="text" class="form-control converter-from-right" />
+                                        <span class="answer-left answer"></span>
+                                    </div>
+                                    <div class="col-sm-2">
+
+                                    </div>
+                                    <div class="col-sm-5" style="text-align: left">
+                                        <select onchange="do_calculator()" class="form-control select2 to" style="width: 100% !important;">
+                                            <?php foreach(getAllCurrencies() as $currency):?>
+                                                <option <?php echo ($currency['code'] == getCurrency()) ? 'selected' : null?> value="<?php echo $currency['code']?>"><?php echo $currency['code']?></option>
+                                            <?php endforeach?>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+                <div class="tab-pane active" id="lists" role="tabpanel">
+                    <table class="table table-hover  table-coin">
+                        <thead>
+                        <tr>
+                            <?php
+                            $columns = my_table_columns();
+                            foreach($columns as $column ) {
+                                if (!in_array($column, array('action','24h_performance'))) {
+                                    $nameUrl = $column.'_url';
+                                    $typeText = $column.'_type';
+                                    if (($column == $order)) {
+                                        $ot = ($orderType == 'ASC') ? 'DESC' : 'ASC';
+                                        $$typeText = ($ot == 'DESC') ? 'arrow-down-circle' : 'arrow-up-circle';
+                                    } else {
+                                        $ot = 'DESC';
+                                        $$typeText = '';
+                                    }
+
+                                    $$nameUrl = url('market').'?limit='.$limit.'&offset='.$offset.'&order='.$column.'&order_type='.$ot;
+                                }
+                            }
+                            ?>
+
+                            <?php foreach($columns as $column):$url = $column .'_url';$type = $column.'_type'?>
+                                <?php if(!in_array($column, array('action','24h_performance'))):?>
+                                <th><a class="ajax-link" href="<?php echo $$url?>"> <?php _lang($column)?> <i style="font-size: 11px" class="icons icon-<?php echo $$type?>"></i> </a></th>
+                                    <?php else:?>
+                                    <th><?php _lang($column)?></th>
+                                    <?php endif?>
+                            <?php endforeach?>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php echo view('main::coin/list', array('coins' => $coins))?>
+                        </tbody>
+                    </table>
+
+                            <div class="" style="text-align: center;padding: 20px 0">
+                    <span class="btn-group">
+                        <?php
+                        $previousOffset = ($offset == 0) ? 0 : $offset - $limit;
+                        $nextoffset = $offset + $limit;
+                        ?>
+                        <a href="<?php echo url('market')?>?limit=<?php echo $limit?>&order=<?php echo $order?>&order_type=<?php echo $orderType?>&offset=<?php echo $previousOffset?>" class="btn btn-secondary ajax-link" <?php echo ($offset== 0) ? 'disabled' : null?>><?php _lang('previous')?></a>
+                        <a href="<?php echo url('market')?>?limit=<?php echo $limit?>&order=<?php echo $order?>&order_type=<?php echo $orderType?>&offset=<?php echo $nextoffset?>" class="btn btn-secondary ajax-link"><?php _lang('next')?></a>
+                    </span>
+                            </div>
+                </div>
+                <div class="tab-pane" id="trending" role="tabpanel">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <?php $currency = getCurrencyDetail()?>
+                            <div style="overflow: auto;overflow-x:hidden;max-height: 500px">
+                                <?php foreach(get_highest_coins() as $coin):?>
+                                    <a
+                                        data-currency="<?php echo $currency['symbol']?>"
+                                        data-symbol="<?php echo $coin['symbol']?>"
+                                        data-logo="<?php echo url($coin['logo'])?>" class="each-top-coin" href="">
+                                        <img style="width: 25px;height: 25px;display: inline-block" src="<?php echo url($coin['logo'])?>"/>
+                                        <div style="display: inline-block">
+                                            <strong><?php echo $coin['name']?></strong> (<span style="color: grey"><?php echo $coin['symbol']?></span>)
+                                            <br/>
+                                            <div style="font-size: 10px">
+                                                <?php _lang('price')?>: <?php echo format_coin_price($coin['price'])?>
+
+                                                <?php _lang('change')?>: <?php echo $coin['change_value']?>%
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php endforeach?>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="home-graph-container">
+                                <div id="home-coin-chart" class="coin-chart">
+                                    <script>
+                  function formatLegendValue(graphDataItem, valueText) {
+                    return '<?php echo $currency['symbol']?>' + valueText;
+                  }
+                    function init_coin_chart(symbol,currency, logo) {
+                        var primaryColor = '#6600CC';
+                        var secondaryColor = '#DD9A57';
+                        var chart;
+                      var chartOptions = {
+                        type: 'stock',
+
+                        categoryAxesSettings: {
+                          minPeriod: 'DD',
+                          color: secondaryColor,
+                          gridColor: primaryColor, // vertical grid color
+                          gridAlpha: 0.1,
+                          gridThickness: 1,
+                          equalSpacing: true // skip time gaps
+                        },
+
+                        dataSets: [{
+                          title: symbol,
+                          fieldMappings: [{
+                            fromField: 'value',
+                            toField: 'value'
+                          }, {
+                            fromField: 'volume',
+                            toField: 'volume'
+                          }],
+                          categoryField: 'date'
+                        }],
+
+                        panelsSettings: {
+                          usePrefixes: true,
+                          creditsPosition: 'bottom-left'
+                        },
+
+                        panels: [{
+                          showCategoryAxis: true,
+                          title: 'Price',
+                          percentHeight: 70,
+                          precision: 2,
+                          drawingIconsEnabled: true,
+                          eraseAll: true,
+                          eraseAll:!0,
+                          stockGraphs: [ {
+                            id: 'g1',
+                            type: 'smoothedLine',
+                            valueField: 'value',
+                            lineColor: primaryColor,
+                            fillAlphas: 0.15,
+                            lineThickness: 2,
+                            comparable: true,
+                            compareField: 'value',
+                            balloonText: '[[title]]: <b>' + currency + '[[value]]</b>',
+                            compareGraphBalloonText: '[[title]]: <b>' + currency + '[[value]]</b>',
+                            useDataSetColors: false
+                          }],
+                          stockLegend: {
+                            periodValueTextComparing: '[[percents.value.close]]%',
+                            periodValueTextRegular: '[[value.close]]',
+                            color: secondaryColor,
+                            valueFunction: formatLegendValue,
+                            numberFormatter: {precision:-1, decimalSeparator:'.', thousandsSeparator:','}
+                          },
+                          valueAxes: [{
+                            position: 'right',
+                            color: secondaryColor, // color of values
+                            gridColor: primaryColor, //horizontal grid line color
+                            gridAlpha: 0.1,
+                            gridThickness: 1
+                          }]
+                        }, {
+                          title: '<?php _lang('volume')?>',
+                          percentHeight: 30,
+                          precision: 0,
+                          stockGraphs: [ {
+                            valueField: 'volume',
+                            type: 'column',
+                            showBalloon: false,
+                            lineColor: primaryColor,
+                            fillAlphas: 0.3,
+                            useDataSetColors: false
+                          } ],
+                          stockLegend: {
+                            periodValueTextRegular: '[[value.close]]',
+                            valueFunction: formatLegendValue,
+                            numberFormatter: {precision:-1, decimalSeparator:'.', thousandsSeparator:','}
+                          },
+                          valueAxes: [{
+                            position: 'right',
+                            gridColor: primaryColor, //horizontal grid line color
+                            gridAlpha: 0.1,
+                            gridThickness: 1
+                          }]
+                        }],
+
+                        chartScrollbarSettings: {
+                          graph: 'g1',
+                          graphFillColor: primaryColor,
+                          graphFillAlpha: 0.4,
+                          selectedGraphFillColor: primaryColor,
+                          selectedGraphFillAlpha: 1
+                        },
+
+                        chartCursorSettings: {
+                          valueBalloonsEnabled: true,
+                          graphBulletSize: 1,
+                          valueLineBalloonEnabled: true,
+                          valueLineEnabled: true,
+                          valueLineAlpha: 1,
+                          categoryBalloonColor: primaryColor,
+                          categoryBalloonAlpha: 0.8,
+                          cursorColor: primaryColor,
+                          cursorAlpha: 0.8
+                        },
+
+                        periodSelector: {
+                          position: 'top',
+                          periodsText: '',
+                          inputFieldsEnabled: false, //disable dates input
+                          periods: [
+                          {
+                            period: 'DD',
+                            count: 1,
+                            label: '1D'
+                          },{
+                            period: 'DD',
+                            count: 7,
+                            label: '1W',
+                            selected: true
+                          },{
+                            period: 'MM',
+                            count: 1,
+                            label: '1M'
+                          },{
+                            period: 'MM',
+                            count: 3,
+                            label: '3M'
+                          },{
+                            period: 'MM',
+                            count: 6,
+                            label: '6M'
+                          },{
+                            period: 'YYYY',
+                            count: 1,
+                            label: '1Y'
+                          }, {
+                            period: 'MAX',
+                            label: '<?php _lang('all')?>'
+                          }]
+                        },
+
+                        dataSetSelector: {
+                          position: '' // leave empty to hide the native dataSet selection control
+                        },
+
+                        comparedDataSets: [],
+
+                        export: {
+                          enabled: true
+                        },
+
+                        listeners: [{
+                          event: 'init',
+                          method: function () {
+                            // add chart background image when the chart is initialized
+                            $('#coin-chart-container').find('.amcharts-stock-panel-div-stockPanel0 .amcharts-main-div')
+                              .prepend('<div style="background: url('+logo+') no-repeat center center; position: absolute; width: 100%; height: 100%; opacity: 0.18;"></div>');
+                          }
+                        }]
+                      };
+
+                        chart = AmCharts.makeChart('coin-chart-container', chartOptions);
+                        SYMBOL = symbol;
+                        //return false;
+                        $('#coin-chart-preloader').fadeIn();
+                      $.getJSON(baseUrl + 'load/history?symbol=' + SYMBOL, function (response) {
+                        $('#coin-chart-preloader').fadeOut();
+                        if (typeof response != 'undefined') {
+                              chart.dataSets[0].dataProvider = response;
+                              chart.validateData();
+                        }
+
+                      });
+                    }
+                </script>
+                                    <div id="coin-chart-preloader" style="position: absolute;height: 100%;width: 100%;display:none">
+                                        <div class="css-loader" style="margin: 20% auto"></div>
+                                    </div>
+                                    <div id="coin-chart-container"></div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" id="risers" role="tabpanel">
+                    <div class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 top-risers" style="margin-top: 30px">
+                            <div class="title"><?php _lang('top-risers')?></div>
+                            <?php foreach(get_risers() as $coin):?>
+                                <div class="clearfix" style="margin: 10px 0">
+                                    <div class="float-left"><?php echo $coin['name']?></div>
+                                    <div class="float-right"><span class="badge badge-success"><?php echo $coin['change_ptc']?>%</span></div>
+                                </div>
+                            <?php endforeach?>
+                        </div>
+                        <div class="col-md-3"></div>
+
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6 top-fallers" style="margin-top: 30px">
+                            <div class="title"><?php _lang('top-fallers')?></div>
+                            <?php foreach(get_fallers() as $coin):?>
+                                <div class="clearfix" style="margin: 10px 0">
+                                    <div class="float-left"><?php echo $coin['name']?></div>
+                                    <div class="float-right"><span class="badge badge-default"><?php echo $coin['change_ptc']?>%</span></div>
+                                </div>
+                            <?php endforeach?>
+                        </div>
+                        <div class="col-md-3"></div>
+                    </div>
+                </div>
+
+                <div class="tab-pane" id="widgets" role="tabpanel">
+
+                </div>
+            </div>
+
+        </div>
+
+        <?php if(config('top_ads', false)):?>
+            <div class="box">
+                <?php echo config('top_ads', '')?>
+            </div>
+        <?php endif?>
+
+    </div>
+</div>

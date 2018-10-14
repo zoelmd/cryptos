@@ -1,0 +1,13 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-6">
+            <div class="box" style="text-align: center;padding: 20px 0">
+                <h3 style="margin: 30px 0"><?php _lang('activation-link-sent')?></h3>
+
+                <a href="<?php echo url('activate/success?id='.input('id'))?>&resend=true" class="btn btn-primary btn-sm"><?php _lang('resend-activation-link')?></a>
+            </div>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+</div>

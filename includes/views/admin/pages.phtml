@@ -1,0 +1,167 @@
+<div style="margin: 20px">
+    <div class="clearfix">
+        <div class="float-left">
+            <h5><?php _lang('pages')?></h5>
+        </div>
+        <div class="float-right">
+            <a href="" data-toggle="modal" data-target="#addPageModal" class="btn btn-primary btn-sm"><?php _lang('add-new-page')?></a>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addPageModal">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _lang('add-new-page')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <form action=""  enctype="multipart/form-data" method="post">
+                    <input type="hidden" name="add-page" value="1"/>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label><?php _lang('title')?></label>
+                            <input required type="text" class="form-control" name="title"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _lang('description')?></label>
+                            <input required type="text" class="form-control" name="description"/>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="custom-control custom-checkbox">
+                                <input type="checkbox" checked name="menu" value="1" class="custom-control-input">
+                                <span class="custom-control-indicator"></span>
+                                <span class="custom-control-description"><?php _lang('show-in-menu')?></span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label><?php _lang('content')?></label>
+                            <textarea id="page-editor" required rows="10" name="content" class="form-control rich-editor"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+
+                        <button  class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+    <ul class="nav nav-tabs " role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" data-toggle="tab" href="#lists" role="tab"><?php _lang('lists')?></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" data-toggle="tab" href="#static" role="tab"><?php _lang('static-pages')?></a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane active" id="lists">
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th style="width: 40%"><?php _lang('title')?></th>
+                        <th style="width: 40%"><?php _lang('link')?></th>
+                        <th><?php _lang('action')?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php foreach(get_page_list() as $page):?>
+                    <tr>
+                        <td><a href="<?php echo page_link($page)?>"><?php echo $page['title']?></a></td>
+                        <td><?php echo page_link($page)?></td>
+                        <td>
+                            <div class="btn-group">
+                                <a data-toggle="modal" data-target="#<?php echo $page['id']?>editPageModal" href="" class="btn btn-secondary"><i class="icons icon-pencil"></i></a>
+                                <a href="<?php echo url('admincp/pages/?action=delete&id='.$page['id'])?>" class="btn btn-secondary confirm-link"><i class="icons icon-close"></i></a>
+                            </div>
+
+                            <div class="modal fade" id="<?php echo $page['id']?>editPageModal">
+                                <div class="modal-dialog modal-lg" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><?php _lang('edit-page')?></h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+
+                                        <form action=""  enctype="multipart/form-data" method="post">
+                                            <input type="hidden" name="edit-page" value="<?php echo $page['id']?>"/>
+                                            <div class="modal-body">
+                                                <div class="form-group">
+                                                    <label><?php _lang('title')?></label>
+                                                    <input required type="text" value="<?php echo $page['title']?>" class="form-control" name="title"/>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label><?php _lang('description')?></label>
+                                                    <input value="<?php echo $page['description']?>" required type="text" class="form-control" name="description"/>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label class="custom-control custom-checkbox">
+                                                        <input type="checkbox" <?php echo ($page['menu']) ? 'checked' :null?> name="menu" value="1" class="custom-control-input">
+                                                        <span class="custom-control-indicator"></span>
+                                                        <span class="custom-control-description"><?php _lang('show-in-menu')?></span>
+                                                    </label>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label><?php _lang('content')?></label>
+                                                    <textarea id="<?php echo $page['id']?>-editor" required rows="10" name="content" class="form-control rich-editor"><?php echo $page['content']?></textarea>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+
+                                                <button  class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                                            </div>
+                                        </form>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                <?php endforeach?>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane " id="static">
+            <form action="" method="post">
+                <input type="hidden" name="static" value="1"/>
+                <div class="form-group row">
+                    <label class="label col-sm-12"><?php _lang('terms-and-condition')?></label>
+                    <textarea id="terms-editor" style="height: 250px" name="val[terms-and-condition]" class="form-control col-sm-12 rich-editor"><?php echo config('terms-and-condition', '')?></textarea>
+                </div>
+
+                <div class="form-group row">
+                    <label class="label col-sm-12"><?php _lang('privacy')?></label>
+                    <textarea id="privacy-editor" style="height: 250px" name="val[privacy]" class="form-control col-sm-12 rich-editor"><?php echo config('privacy', '')?></textarea>
+                </div>
+
+
+                <div class="form-group row">
+                    <label class="label col-sm-12"><?php _lang('about')?></label>
+                    <textarea id="about-editor" style="height: 250px" name="val[about]" class="form-control col-sm-12 rich-editor"><?php echo config('about', '')?></textarea>
+                </div>
+
+                <div  style="padding: 10px; text-align: center">
+                    <button class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

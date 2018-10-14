@@ -1,0 +1,135 @@
+<div class="clearfix">
+    <div class="float-left">
+        <h5><?php _lang('coins-manager')?></h5>
+    </div>
+    <div class="float-right">
+        <form action="" method="get">
+            <input name="term" value="<?php echo input('term')?>" type="text" class="form-control-sm" placeholder="<?php _lang('search-coin')?>"/>
+            <button class="btn btn-sm btn-primary"><i class="icons icon-magnifier"></i></button>
+        </form>
+    </div>
+</div>
+
+<table class="table table-hover table-striped">
+    <thead>
+    <tr>
+
+        <th><a > <?php _lang('info')?> </a></th>
+        <th><a ><?php _lang('price')?></a></th>
+        <th><a ><?php _lang('change')?> %(24H) </a></th>
+
+        <th><a ><?php _lang('action')?></a></th>
+
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach($coins as $coin):?>
+        <tr data-price="<?php echo format_coin_price($coin['price'],false,false)?>" class="coin-detail-container <?php echo $coin['symbol']?>-detail-container" id="" data-symbol="<?php echo $coin['symbol']?>">
+            <td>
+
+                <img style="width: 25px;height: 25px;display: inline-block" src="<?php echo url($coin['logo_small'])?>"/>
+                <div style="display: inline-block">
+                    <a class="ajax-link" href="<?php echo url('coin/'.strtolower($coin['symbol']))?>"><strong><?php echo $coin['name']?></strong></a>
+                    <br/>
+                    <span style="color: grey"><?php echo $coin['symbol']?></span></div>
+            </td>
+            <td >
+                <sup><?php echo getCurrencySymbol()?></sup>
+                <span class="price"><?php echo format_coin_price($coin['price'],false)?></span>
+            </td>
+            <td>
+            <span class="change <?php echo (($coin['change_ptc'] > 0)) ? 'change-up' : 'change-down'?>">
+                <i class=" <?php echo (($coin['change_ptc'] > 0)) ? 'icons icon-arrow-up' : 'icons icon-arrow-down'?>"></i>
+                <?php echo $coin['change_ptc']?>%</span>
+
+            </td>
+           <td>
+               <div class="btn-group">
+                   <a href="" data-toggle="modal" data-target="#<?php echo $coin['symbol']?>Modal" class="btn btn-sm btn-secondary"><?php _lang('edit')?></a>
+                   <!--<a href="" class="btn btn-sm btn-secondary"><i class="icons icon-close"></i></a>-->
+               </div>
+
+               <div class="modal fade" id="<?php echo $coin['symbol']?>Modal">
+                   <div class="modal-dialog" role="document">
+                       <form action=""  method="post">
+                           <input type="hidden" name="id" value="<?php echo $coin['id']?>"/>
+                           <div class="modal-content">
+                               <div class="modal-header">
+                                   <h5 class="modal-title"><?php _lang('edit-coin')?></h5>
+                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                       <span aria-hidden="true">&times;</span>
+                                   </button>
+                               </div>
+                               <div class="modal-body">
+                                   <div class="form-group">
+                                       <label><?php _lang('featured')?></label>
+                                       <select class="form-control-sm" name="featured">
+                                           <option value="0" <?php echo (!$coin['featured']) ? 'selected' : null?>><?php _lang('no')?></option>
+                                           <option value="1" <?php echo ($coin['featured']) ? 'selected' : null?>><?php _lang('yes')?></option>
+                                       </select>
+                                   </div>
+                                   <div class="form-group">
+                                       <label><?php _lang('title')?></label>
+                                       <input type="text" required name="title"
+                                              value="<?php echo ($coin['seo_title']) ? $coin['seo_title'] : $coin['name'].' ('.$coin['symbol'].') '.lang('info-quotes-chart')?>"
+                                              class="form-control"/>
+                                   </div>
+
+                                   <div class="form-group">
+                                       <label><?php _lang('seo-descripition')?></label>
+                                       <input type="text" required name="seo_description"
+                                              value="<?php echo ($coin['seo_description']) ? $coin['seo_description'] : $coin['name'].' ('.$coin['symbol'].') '.lang('info-quotes-chart')?>"
+                                              class="form-control"/>
+                                   </div>
+
+                                   <div class="form-group">
+                                       <label><?php _lang('name')?></label>
+                                       <input type="text" required name="name" value="<?php echo $coin['name']?>" class="form-control"/>
+                                   </div>
+                                   <div class="form-group">
+                                       <label><?php _lang('symbol')?></label>
+                                       <input type="text" required name="symbol" value="<?php echo $coin['symbol']?>" class="form-control"/>
+                                   </div>
+                                   <div class="form-group">
+                                       <label><?php _lang('description')?></label>
+                                       <textarea class="form-control" rows="10" name="description"><?php echo $coin['description']?></textarea>
+                                   </div>
+
+
+                                   <div class="form-group">
+                                       <label><?php _lang('features')?></label>
+                                       <textarea class="form-control" rows="10" name="features"><?php echo $coin['features']?></textarea>
+                                   </div>
+
+                                   <div class="form-group">
+                                       <label><?php _lang('technology')?></label>
+                                       <textarea class="form-control" rows="10" name="tech"><?php echo $coin['tech']?></textarea>
+                                   </div>
+
+                               </div>
+                               <div class="modal-footer">
+
+                                   <button  class="btn btn-primary btn-sm"><?php _lang('save')?></button>
+                               </div>
+                           </div>
+                       </form>
+                   </div>
+               </div>
+           </td>
+
+        </tr>
+    <?php endforeach?>
+    </tbody>
+</table>
+
+<div class="" style="text-align: center">
+            <span class="btn-group">
+                <?php
+                $offset = input('offset', 0);
+                $previousOffset = ($offset == 0) ? 0 : $offset - 50;
+                $nextoffset = $offset + 50;
+                ?>
+                <a href="<?php echo url('admincp/coins')?>?offset=<?php echo $previousOffset?>&term=<?php echo input('term')?>" class="btn btn-secondary ajax-link" <?php echo ($offset== 0) ? 'disabled' : null?>><?php _lang('previous')?></a>
+                <a href="<?php echo url('admincp/coins')?>?offset=<?php echo $nextoffset?>&term=<?php echo input('term')?>" class="btn btn-secondary ajax-link"><?php _lang('next')?></a>
+            </span>
+</div>

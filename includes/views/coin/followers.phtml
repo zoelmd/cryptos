@@ -1,0 +1,10 @@
+<div class="box">
+    <?php $users =  get_followers($coin['id'], 'coin');?>
+    <div class="m-3"><h5>
+            <?php echo lang('followers')?> (<?php echo count($users)?>)
+        </h5></div>
+
+    <?php  foreach($users as $user):?>
+        <?php echo view('main::user/display-inline', array('user' => $user))?>
+    <?php endforeach?>
+</div>

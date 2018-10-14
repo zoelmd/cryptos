@@ -1,0 +1,8 @@
+<div class='user-popover'>
+    <img style='width:30px;height:30px;border-radius:5px' src='<?php echo get_avatar(75, $user)?>'/>  <span><?php echo $user['full_name']?></span>
+
+    <?php if($user['bio']):?>
+        <p><?php echo $user['bio']?></p>
+    <?php endif?>
+    <?php echo view('main::user/render-badges', array('user' => $user))?>
+</div>

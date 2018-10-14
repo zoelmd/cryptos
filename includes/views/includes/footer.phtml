@@ -1,0 +1,56 @@
+<script>
+    var baseUrl = '<?php echo url()?>';
+    var isloggedin = <?php echo (is_loggedIn()) ? 1 : 0?>;
+    window.month = ['<?php _lang('january')?>','<?php _lang('february')?>','<?php _lang('match')?>','<?php _lang('april')?>','<?php _lang('may')?>',
+    '<?php _lang('june')?>','<?php _lang('july')?>','<?php _lang('august')?>','<?php _lang('september')?>','<?php _lang('october')?>','<?php _lang('november')?>',
+    '<?php _lang('december')?>'];
+    window.lang = {
+        ok : '<?php _lang("ok")?>',
+        yes: '<?php _lang('yes')?>',
+        cancel : '<?php _lang('cancel')?>',
+        are_you_sure : '<?php _lang('are_you_sure')?>',
+        notImageError : '<?php _lang('not-image-error')?>',
+        notVideoError : '<?php _lang('not-video-error')?>',
+        post_empty_error : '<?php _lang('post-empty-error')?>',
+        notStoryError : '<?php _lang('file-not-story-error')?>',
+        buy : '<?php _lang('buy')?>',
+        sell : '<?php _lang('sell')?>',
+        unknown : '<?php _lang('unknown')?>',
+    };
+    var allowPhotoSize = <?php echo config('max-image-size', 10000000)?>;
+    var checkTimeInterval = <?php echo config('check-interval-time', 10000)?>;
+    var decimalPoint = <?php echo config('decimal-point', 3)?>;
+    var decimalSep = '<?php echo config('decimal-separator', '.')?>';
+    var thousandSep = '<?php echo config('thousand-separator', ',')?>';
+    var allowImagesUploaded  = 1;
+    var dateFormat = '<?php echo config('date-format', 'd-m-Y')?>';
+    var supportImagesType = '<?php echo config('image-file-types', 'jpg,png,gif,jpeg')?>';
+    var base_currency_symbol = '<?php echo getCurrencySymbol()?>';
+    var base_currency = '<?php echo (is_fiat_currency_coin()) ? getCurrency() : config('base_currency','USD')?>';
+    var base_currency_rate = <?php  $currency = getCurrencyDetail(); echo (!$currency['rate']) ? 1 : $currency['rate']?>;
+    var allowImageSizeError = '<?php echo lang('image-file-is-large', array('size' => format_bytes(config('max-image-size', 10000000))))?>'
+    var allowedImageError = '<?php echo lang('allowed-number-image', array('number' => config('allowed-images', 0)))?>'
+    var isFiatCurrencyCoin = <?php echo (is_fiat_currency_coin()) ? 1 : 0?>
+</script>
+
+<?php echo $beforeContent?>
+<script src="<?php echo url('assets/js/plugin.js')?>?v=1.6"></script>
+<script src="<?php echo url('assets/js/amstock/amcharts.js')?>"></script>
+<script src="<?php echo url('assets/js/amstock/serial.js')?>"></script>
+<script src="<?php echo url('assets/js/amstock/amstock.js')?>"></script>
+<script src="https://cdn.ckeditor.com/4.8.0/standard/ckeditor.js"></script>
+<script src="<?php echo url('assets/js/amstock/plugins/export/export.min.js')?>"></script>
+<?php if(config('enable-recaptcha', 0)):?>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php endif?>
+<script src="<?php echo url("styles/".get_theme()."/js/script.js")?>?v=2.8"></script>
+<?php echo $afterContent?>
+<?php if(input('login') and !is_loggedin()):?>
+<script>
+    $(function() {
+        $("#loginModal").modal('show');
+    });
+</script>
+<?php endif?>
+</body>
+</html>

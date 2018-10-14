@@ -1,0 +1,132 @@
+<div class="generic-title">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                <h5><?php _lang('exchanges')?></h5>
+            </div>
+            <div class="col-md-10 " style="position: relative">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link  active" data-toggle="tab" href="#lists">
+                            <?php echo $coin?> <?php _lang('lists')?>
+                            <span class="badge badge-default exchange-count-list" ></span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " data-toggle="tab" href="#trades">
+                            <?php echo $coin?> <?php _lang('trades')?>
+                        </a>
+                    </li>
+
+                </ul>
+                <div class="" style="position: absolute;right: 15px;top: 0px">
+                    <span class="hide-mobile"><?php _lang('showing-for')?></span>
+                    <select class="select2" onchange="return switch_exchange_currency(this)" >
+                        <?php foreach(get_all_coins() as $dcoin):?>
+                            <option <?php echo ($dcoin['symbol'] == $coin) ? 'selected' : null?> value="<?php echo $dcoin['symbol']?>"><?php echo $dcoin['symbol']?></option>
+                        <?php endforeach?>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="box" style="padding: 0">
+        <div class="tab-content">
+            <div class="tab-pane active" id="lists" role="tabpanel">
+                <table id="exchangeDataTableList" data-coin="<?php echo $coin?>"  class="table table-hover  table-coin">
+                    <thead>
+                    <tr>
+                        <th><?php _lang('market')?></th>
+                        <th><?php _lang('price')?></th>
+                        <th><?php _lang('open-24h')?></th>
+                        <th><?php _lang('range-24h')?></th>
+                        <th><?php _lang('volume-24h')?></th>
+                        <th><?php _lang('change-24h')?></th>
+                        <th><?php _lang('action')?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach(get_available_exchanges() as $exchange => $link):?>
+                        <tr class="coin-exchange-container" id="<?php echo $exchange?>-detail-container" data-name="<?php echo $exchange?>" data-symbol="<?php echo $coin?>">
+                            <td>
+
+                                <div class="name"><?php _lang('market')?> </div>
+                                <div class="info" style="position: relative">
+                                    <span class="badge badge-default"><?php echo $exchange?></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="name"><?php _lang('price')?> </div>
+                                <div class="info" style="position: relative">
+                                    <sup style="position: absolute;top: 4px;left: -15px"><?php echo getCurrencySymbol()?></sup>
+                                    <span class="exchange-price"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="name"><?php _lang('open-24h')?> </div>
+                                <div class="info" style="position: relative">
+                                    <sup style="position: absolute;top: 4px;left: -15px"><?php echo getCurrencySymbol()?></sup>
+                                    <span class="exchange-open"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="name"><?php _lang('range-24h')?> </div>
+                                <div class="info" style="position: relative">
+                                    <div style="position: relative">
+
+                                        L :<?php echo getCurrencySymbol()?> <span class="exchange-low"></span>
+                                    </div>
+                                    <div style="position: relative">
+
+                                        H : <?php echo getCurrencySymbol()?> <span class="exchange-high"></span>
+                                    </div>
+
+                                </div>
+                            </td>
+                            <td>
+                                <div class="name"><?php _lang('volume-24h')?> </div>
+                                <div class="info" style="position: relative">
+                                    <sup style="position: absolute;top: 4px;left: -15px"><?php echo getCurrencySymbol()?></sup>
+                                    <span class="exchange-volume"></span>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="name"><?php _lang('change-24h')?> </div>
+                                <div class="info" style="position: relative">
+                                    <span class="exchange-change"></span>
+                                </div>
+                            </td>
+                            <td>
+                                <a href="#" <?php echo (!$link) ? 'disabled' : null?> class="btn btn-sm  <?php echo (!$link) ? 'disabled btn-secondary' : 'btn-yellow'?>" style="padding: 5px;border-radius:4px;" onclick="return window.open('<?php echo $link?>')"><?php _lang('start-trading')?></a>
+                            </td>
+                        </tr>
+                    <?php endforeach?>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="tab-pane" id="trades" role="tabpanel">
+                <table id="tradeDataTableList" data-coin="<?php echo $coin?>"  class="table table-hover  table-coin">
+                    <thead>
+                    <tr>
+                        <th><?php _lang('market')?></th>
+                        <th><?php _lang('type')?></th>
+                        <th><?php _lang('price')?></th>
+                        <th><?php _lang('quantity')?></th>
+                        <th><?php _lang('total')?></th>
+
+                    </tr>
+                    </thead>
+                    <tbody id="trades">
+
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

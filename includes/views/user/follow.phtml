@@ -1,0 +1,9 @@
+<?php if(($type == 'user' and $typeId != get_userid()) or $type == 'coin'):?>
+
+    <a data-id="<?php echo $typeId?>" data-type="<?php echo $type?>" href="" class=" <?php echo (is_following($typeId, $type)) ? '' : 'hide'?> btn  btn-sm btn-secondary btn-block unfollow-btn unfollow-btn-<?php echo $typeId?>"><?php _lang('following')?></a>
+
+    <a  data-id="<?php echo $typeId?>" data-type="<?php echo $type?>" href="" class=" <?php echo (is_following($typeId, $type)) ? 'hide' : ''?> btn btn-sm btn-success btn-block follow-btn follow-btn-<?php echo $typeId?> ">
+        <i class="icons icon-plus"></i> <?php _lang('follow')?>
+    </a>
+
+<?php endif?>

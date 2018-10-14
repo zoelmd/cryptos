@@ -1,0 +1,382 @@
+
+<div class="load-bar">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+</div>
+<div class="loader-container">
+    <div class="css-loader"></div>
+</div>
+
+<div id="search-viewer">
+    <a href="" onclick="return hide_search()" class="close"><i class="icons icon-close"></i></a>
+    <div class="head">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-10">
+                    <input onkeyup="return do_search(this)" placeholder="<?php _lang('search-placeholder')?>" type="text" class="form-control"/>
+                </div>
+                <div class="col-sm-2">
+                    <i class="icons icon-magnifier"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container content">
+
+    </div>
+</div>
+
+<?php if(is_loggedin()):?>
+    <?php $badges = get_user_badges(get_userid(), true)?>
+    <?php if(config('enable-badge', true) and $badges):?>
+        <div class="new-badge-hover">
+            <div class="cover"></div>
+            <a href="" class="close" onclick="return close_new_badge()"><i class="icons icon-close"></i></a>
+            <div class="container">
+                <h1><?php _lang('you-have-new-badge')?></h1>
+                <div style="padding: 20px 0;text-align: center">
+                    <?php foreach($badges as $badge):mark_badge_seen($badge['id'])?>
+                        <img class="tool-tip" style="width: 150px;margin: 10px" title="<?php echo $badge['name']?>"  src="<?php echo url($badge['image'])?>"/>
+                    <?php endforeach?>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+<?php endif?>
+
+<div class="modal fade" id="reportModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><?php _lang('report')?></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" required="required" name="" placeholder="<?php _lang('report-reason')?>"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="send-report-btn" type="button" class="btn btn-primary btn-sm"><?php _lang('send-report')?></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<nav class="navbar navbar-toggleable-md navbar-dark bg-faded" id="header">
+    <div id="particle-background"></div>
+    <div class="highlight">
+        <div class="container">
+            <?php $details = get_coin_stats()?>
+            <ul>
+                <li><?php _lang('total-market-cap')?>  <strong><?php echo getCurrencySymbol().formatNumber($details['total_market_cap'])?></strong></li>
+                <li><?php _lang('total-volume-24h')?>  <strong><?php echo getCurrencySymbol().formatNumber($details['total_volume'])?></strong></li>
+                <li> <strong><?php echo $details['total_coins']?></strong> <?php _lang('cryptocurrencies')?> </li>
+            </ul>
+        </div>
+    </div>
+    <div class="container clearfix" style="position: relative">
+
+        <a class="navbar-brand" href="<?php echo url()?>"><img src="<?php echo url(config('site-logo', 'assets/images/logo.png'))?>"/></a>
+
+        <div class="header-loader-container">
+            <div class="css-loader"></div>
+        </div>
+        <ul class=" clearfix" id="header-nav">
+            <?php if(config('market-menu', 1)):?>
+                <li id="market-nav" class="nav-item <?php echo (app()->activeMenu == 'market') ? 'active':null?>">
+                    <a class="nav-link ajax-link" href="<?php echo url('market')?>">
+                        <i class="icons icon-chart"></i>
+                        <span><?php _lang('market')?></span>
+                    </a>
+                </li>
+            <?php endif?>
+
+            <?php if(config('exchanges-menu', 1)):?>
+            <li id="exchanges-nav" class="nav-item <?php echo (app()->activeMenu == 'exchanges') ? 'active':null?>">
+                <a class="nav-link ajax-link" href="<?php echo url('exchanges')?>">
+                    <i class="icons icon-briefcase"></i>
+                    <span><?php _lang('exchanges')?></span>
+                </a>
+            </li>
+            <?php endif?>
+
+            <?php if(config('blog-menu', 1)):?>
+            <li id="blog-nav" class="nav-item <?php echo (app()->activeMenu == 'blog') ? 'active':null?>">
+                <a class="nav-link ajax-link" href="<?php echo url('blog')?>">
+                    <i class="icons icon-list"></i>
+                    <span><?php _lang('blog')?></span>
+                </a>
+            </li>
+            <?php endif?>
+
+            <?php if(config('forum-menu', 1)):?>
+            <li id="forum-nav" class="nav-item <?php echo (app()->activeMenu == 'forum') ? 'active':null?>">
+                <a class="nav-link ajax-link" href="<?php echo url('forum')?>">
+                    <i class="icons icon-speech"></i>
+                    <span><?php _lang('forum')?></span>
+                </a>
+            </li>
+            <?php endif?>
+
+            <?php if(config('portfolio-menu', 1)):?>
+            <?php if(is_loggedin()):?>
+                <li id="portfolio-nav" class="nav-item <?php echo (app()->activeMenu == 'portfolio') ? 'active':null?>">
+                    <a class="nav-link ajax-link" href="<?php echo url('portfolio')?>">
+                        <i class="icons icon-cup"></i>
+                        <span><?php _lang('portfolio')?></span>
+                    </a>
+                </li>
+            <?php else:?>
+                <li id="wallets-nav" class="nav-item <?php echo (app()->activeMenu == 'portfolio') ? 'active':null?>">
+                    <a class="nav-link" href="" onclick="return pre_process_result('login-is-needed')">
+                        <i class="icons icon-cup"></i>
+                        <span><?php _lang('portfolio')?></span>
+                    </a>
+                </li>
+            <?php endif?>
+            <?php endif?>
+
+            <?php foreach(get_main_menu_list() as $menu):?>
+                <li id="-nav" class="nav-item ">
+                    <a class="nav-link <?php echo ($menu['ajaxify']) ? 'ajax-link' : null?>" href="<?php echo $menu['link']?>" >
+                        <i class="<?php echo $menu['icon']?>"></i>
+                        <span><?php _lang($menu['title'])?></span>
+                    </a>
+                </li>
+            <?php endforeach?>
+
+            <?php $moreMenus = get_more_menu_list()?>
+            <?php if($moreMenus):?>
+                <li id="-nav" class="nav-item  dropdown">
+                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" >
+                        <i class="icons icon-options-vertical"></i>
+                        <span><?php _lang('more')?></span>
+                    </a>
+                    <div class="dropdown-menu more-menu-list">
+                        <?php foreach($moreMenus as $menu):?>
+                            <a class="dropdown-item <?php echo ($menu['ajaxify']) ? 'ajax-link' : null?>" href="<?php echo $menu['link']?>" >
+                                <?php _lang($menu['title'])?>
+                            </a>
+                        <?php endforeach?>
+                    </div>
+                </li>
+            <?php endif?>
+        </ul>
+
+        <div class="right">
+
+            <ul class="nav">
+                <li class="nav-item ">
+                    <a onclick="return open_search()"  style="color: white" class="btn btn-sm" href="">
+                        <i  class="icons icon-magnifier"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a style="color: white" class="btn btn-sm   dropdown-toggle" data-toggle="dropdown" href="#"><?php echo getCurrency()?></a>
+                    <div class="dropdown-menu currency-switch-dropdown dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                        <?php foreach(getAllCurrencies() as $currency):?>
+                            <a  href="<?php echo url('currency/switch?code='.$currency['code'])?>"><?php echo $currency['code']?></a>
+                        <?php endforeach?>
+
+                    </div>
+                </li><?php if(is_loggedin()):?>
+                    <li id="notifications-nav" class="nav-item <?php echo (app()->activeMenu == 'notifications') ? 'active':null?>" style="position: relative;">
+                        <a class="ajax-link nav-link header-notification-icon"  href="<?php echo url('notifications')?>">
+                            <i class="icons icon-bell" style="position: relative;top: 12px;display: block;color:white"></i>
+                        </a>
+                    </li>
+                <?php endif?>
+                <li class="dropdown">
+                    <a style="position: relative;top: 17px" href="" class="dropdown-toggle" data-toggle="dropdown"><img src="<?php echo url('assets/images/flags/'.Translation::getInstance()->lang().'.png')?>"/></a>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <?php foreach(get_languages_list() as $key => $name):?>
+                            <li><a class="dropdown-item" href="<?php echo url('set/language?id='.$key)?>"><img src="<?php echo url('assets/images/flags/'.$key.'.png')?>"/> <?php echo $name?></a></li>
+                        <?php endforeach?>
+                    </ul>
+                </li>
+
+                    <?php if(is_loggedin()):?>
+                    <li class="nav-item user-account-menu dropdown" style="position: relative;top: 5px">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><img src="<?php echo get_avatar(75)?>"/> </a>
+                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                            <a class="dropdown-item ajax-link" href="<?php echo profile_link()?>">
+                                <h6><?php echo get_user()['full_name']?></h6>
+                                <span>@<?php echo get_user()['username']?></span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item ajax-link" href="<?php echo profile_link()?>"><?php _lang('profile')?></a>
+                            <?php if(is_admin()):?>
+                                <a class="dropdown-item ajax-link" href="<?php echo url('admincp')?>"><?php _lang('administrator')?></a>
+                            <?php endif?>
+                            <a class="dropdown-item ajax-link" href="<?php echo url('settings')?>"><?php _lang('account-settings')?></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="<?php echo url('logout')?>"><?php _lang('logout')?></a>
+                        </div>
+                    </li>
+
+                    <?php else:?>
+                        <li class="nav-item">
+                                <a data-target="#loginModal" class="btn btn-sm btn-primary " data-toggle="modal" href="#"><?php _lang('login')?></a>
+                        </li>
+                    <?php endif?>
+
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+    <div class="modal fade" id="loginModal">
+        <div class="modal-dialog" role="document">
+            <form action="" id="login-form" method="post">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title"><?php _lang('login')?></h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input type="text" required name="username" placeholder="<?php _lang('username-email')?>" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" required name="password" placeholder="<?php _lang('password')?>" class="form-control"/>
+                        </div>
+
+                        <?php
+                        $enableSocialAuth = false;
+                        foreach(array('facebook','twitter','instagram','google','vkontakte') as $type){
+                            if (config($type.'-enabled', false)) $enableSocialAuth = true;
+                        }
+
+                        ?>
+                        <?php if($enableSocialAuth):?>
+                            <div class="form-pane" id="social-auth-links">
+                                <?php if(config('facebook-enabled', false)):?>
+                                    <a class="tool-tip" title="<?php _lang('login-with-facebook')?>" href="<?php echo url('social/auth/facebook')?>"><i class="icons icon-social-facebook"></i></a>
+                                <?php endif?>
+                                <?php if(config('google-enabled', false)):?>
+                                    <a class="tool-tip" title="<?php _lang('login-with-google')?>" href="<?php echo url('social/auth/google')?>"><i class="icons icon-social-google"></i></a>
+                                <?php endif?>
+
+                                <?php if(config('twitter-enabled', false)):?>
+                                    <a class="tool-tip" title="<?php _lang('login-with-twitter')?>" href="<?php echo url('social/auth/twitter')?>"><i class="icons icon-social-twitter"></i></a>
+                                <?php endif?>
+
+                                <?php if(config('instagram-enabled', false)):?>
+                                    <a class="tool-tip" title="<?php _lang('login-with-instagram')?>" href="<?php echo url('social/auth/instagram')?>"><i class="icons icon-social-instagram"></i></a>
+                                <?php endif?>
+
+                                <?php if(config('vkontakte-enabled', false)):?>
+                                    <a class="tool-tip" title="<?php _lang('login-with-vkontakte')?>" href="<?php echo url('social/auth/vkontakte')?>"><i class="icons icon-social-vkontakte"></i></a>
+                                <?php endif?>
+
+
+
+
+                            </div>
+                        <?php endif?>
+
+                    </div>
+                    <div class="modal-footer">
+                        <a href="<?php echo url('forgot-password')?>" class="home-forgot-link float-left"><?php _lang('forgot-password')?></a>
+                        <button  class="btn btn-primary btn-sm"><?php _lang('login')?></button>
+                    </div>
+                </div>
+                </form>
+        </div>
+    </div>
+
+<div class="modal fade" id="signupModal">
+    <div class="modal-dialog" role="document">
+        <form action="" id="signup-form" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><?php _lang('signup')?></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="text" required name="name" placeholder="<?php _lang('fullname')?>" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" required name="username" placeholder="<?php _lang('username')?>" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" required name="email" placeholder="<?php _lang('email-address')?>" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" required name="password" placeholder="<?php _lang('password')?>" class="form-control"/>
+                    </div>
+                    <div class="form-group">
+                        <?php if(config('enable-recaptcha', 0)):?>
+                            <div class="g-recaptcha" data-sitekey="<?php echo config('captcha-site-key')?>" style="padding: 3px "></div>
+                        <?php endif?>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button  class="btn btn-primary btn-sm"><?php _lang('signup')?></button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div id="main-content">
+    <div id="trade"></div>
+    <div id="page-content">
+        <?php echo $content?>
+    </div>
+</div>
+
+<div class="footer">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 info">
+                <div class="title"><?php _lang('our-company')?></div>
+                <ul>
+                    <li><a href="<?php echo url('about')?>"><?php _lang('about-us')?></a></li>
+                    <li><a href="<?php echo url('privacy')?>"><?php  _lang('privacy-policy')?></a></li>
+                    <li><a href="<?php echo url('terms')?>"><?php  _lang('terms-and-condition')?></a></li>
+                   <li><a href="<?php echo url('sitemap')?>"><?php  _lang('sitemap')?></a></li>
+                </ul>
+            </div>
+            <div class="col-md-4">
+
+
+
+
+                <div style="margin: 20px 0">
+                    <?php if(is_light_off()):?>
+                        <a href="<?php echo url('turn/light?t=on')?>" class="btn btn-sm btn-secondary"><?php _lang('turn-on-light')?></a>
+                    <?php else:?>
+                        <a href="<?php echo url('turn/light?t=off')?>" class="btn btn-sm btn-secondary"><?php _lang('turn-off-light')?></a>
+                    <?php endif?>
+                </div>
+
+
+            </div>
+
+            <div class="col-md-4">
+                <div>
+                    <a href="https://www.facebook.com/<?php echo config('facebook-handle')?>" class="btn btn-sm "><i class="icons icon-social-facebook"></i></a>
+                    <a href="https://www.twitter.com/<?php echo config('twitter-handle')?>" class="btn btn-sm "><i class="icons icon-social-twitter"></i></a>
+                    <a href="https://plus.google.com/<?php echo config('google-handle')?>" class="btn btn-sm "><i class="icons icon-social-google"></i></a>
+                </div>
+                <div>
+                    <?php _lang('copyright')?> © <?php echo date('Y')?> <?php echo config('site-title')?>. <?php _lang('all-right-reserved')?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
